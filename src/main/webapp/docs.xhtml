@@ -1,0 +1,1272 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Documentation</ui:define>
+    
+    <ui:define name="head">
+        <style type="text/css">
+            .docs h1 {
+                margin-top: 30px;
+            }
+            
+            .docs pre {
+                font-family: monospace;
+                background-color: #0C2238;
+                color: #dddddd;
+                padding: 1em;
+                font-size: 14px;
+                border-radius: 3px;
+                overflow: auto;
+            }
+            
+            .video-container {
+                position: relative;
+                width: 100%;
+                height: 0;
+                padding-bottom: 56.25%;
+            }
+            .video-container iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+    
+        
+        
+        <body class="" data-languages="">
+    <div id="app-wrap" class="has-scrolled">
+      <a id="top"></a>
+
+   
+            
+              
+              
+                
+
+
+
+
+      <div id="main-content">
+        <main id="content-inner">
+          <!-- Page content -->
+          <div class="page-wrapper row">
+            <!-- Content -->
+            <div class="content col-md">
+              <section>
+                <h1 id="transaction-response-codes">Transaction response codes</h1>
+                <p>These response codes have been presented for your reference and are derived from the message format defined in Australian Standard 2805.2 (1997).</p>
+                <p>It is highly unlikely that you will receive many of these response codes; as a general rule you should use the provided summary response code to determine whether a transaction is approved or declined. Valid response codes are of a two digit alphanumeric format.</p>
+                <p>If an unknown response code is returned please contact Westpac with the appropriate transaction details.</p>
+                <p>Please note that there are no response codes specific to card verification number mismatches. This is because no financial institutions within Australia currently return any such information if declining a transaction for security reasons. Response Codes are generally returned from the customer's issuing bank.</p>
+              </section>
+              <section>
+                <h1 id="credit-card-transaction-response-codes">Credit card transaction response codes</h1>
+                <p>Successful credit card transactions will generally have a response code of 00 - Approved or completed successfully or 08 - Honour with Identification. Other statuses indicate a problem processing the transaction. If you receive a status code starting with 'Q' that you do not understand, you should contact your Client Enquiry Manager with the transaction details.</p>
+                <p>For non approved transaction statuses that do not start with 'Q' the card holder will likely need to contact their issuing financial institution for more information about the rejected transaction. </p>
+                <p>When doing so you can recommend they:</p>
+                <ul>
+                  <li>provide the date and amount of the transaction.</li>
+                  <li>request specific information regarding the transaction rejection.</li>
+                </ul>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Summary Code</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0</td>
+                      <td>Approved</td>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td>Declined</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Error</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Rejected</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Response Code</th>
+                      <th>Description</th>
+                      <th>Summary Code</th>
+                      <th>Soft Decline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>00</td>
+                      <td>Approved or completed successfully. </td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>01</td>
+                      <td>Refer to card issuer. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>02</td>
+                      <td>Refer to card issuers special conditions</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>03</td>
+                      <td>Invalid merchant. </td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>04</td>
+                      <td>Pick-up card.</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>05</td>
+                      <td>Do not honor. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>06</td>
+                      <td>Error</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>07</td>
+                      <td>Pick-up card, special condition</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>08</td>
+                      <td>Honor with identification.</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>09</td>
+                      <td>Request in progress</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>Approved for partial amount</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Approved VIP</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Invalid transaction. </td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Invalid amount</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>14</td>
+                      <td>Invalid card number (no such number).</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>15</td>
+                      <td>No such issuer</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>16</td>
+                      <td>Approved, update Track 3</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>17</td>
+                      <td>Customer cancellation</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>18</td>
+                      <td>Customer dispute</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>19</td>
+                      <td>Re-enter transaction</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>20</td>
+                      <td>Invalid response</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>21</td>
+                      <td>No action taken</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>22</td>
+                      <td>Suspected malfunction. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>23</td>
+                      <td>Unacceptable transaction fee</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>24</td>
+                      <td>File update not supported by receiver</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>25</td>
+                      <td>Unable to locate record on file</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>26</td>
+                      <td>Duplicate file update record, old record replaced</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>27</td>
+                      <td>File update field edit error</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>28</td>
+                      <td>File update file locked out</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>29</td>
+                      <td>File update not successful, contact acquirer</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>30</td>
+                      <td>Format error</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>31</td>
+                      <td>Bank not supported by switch</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>32</td>
+                      <td>Completed partially</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>33</td>
+                      <td>Expired card</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>34</td>
+                      <td>Suspected fraud</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>35</td>
+                      <td>Card acceptor contact acquirer</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>36</td>
+                      <td>Restricted card</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>37</td>
+                      <td>Card acceptor call acquirer security</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>38</td>
+                      <td>Allowable PIN tries exceeded</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>39</td>
+                      <td>No credit account</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>40</td>
+                      <td>Request function not supported</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>41</td>
+                      <td>Lost card</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>42</td>
+                      <td>No universal account. </td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>43</td>
+                      <td>Stolen card, pick up</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>44</td>
+                      <td>No investment account</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>45-50</td>
+                      <td>Reserved for ISO use</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>51</td>
+                      <td>Not sufficient funds</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>52</td>
+                      <td>No cheque account</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>53</td>
+                      <td>No savings account</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>54</td>
+                      <td>Expired card.</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>55</td>
+                      <td>Incorrect PIN</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>56</td>
+                      <td>No card record</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>57</td>
+                      <td>Transaction not permitted to cardholder</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>58</td>
+                      <td>Transaction not permitted to terminal</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>59</td>
+                      <td>Suspected fraud</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>60</td>
+                      <td>Card acceptor contact acquirer</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>61</td>
+                      <td>Exceeds withdrawal amount limits. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>62</td>
+                      <td>Restricted card</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>63</td>
+                      <td>Security violation</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>64</td>
+                      <td>Original amount incorrect</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>65</td>
+                      <td>Exceeds withdrawal frequency limit</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>66</td>
+                      <td>Card acceptor call acquirers security department</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>67</td>
+                      <td>Hard capture (requires that card be picked up at ATM)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>68</td>
+                      <td>Response received too late</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>69-74</td>
+                      <td>Reserved for ISO use</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>75</td>
+                      <td>Allowable number of PIN tries exceeded</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>76-89</td>
+                      <td>Reserved for private use</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>90</td>
+                      <td>Cutoff is in process (Switch ending a day's business and starting the next. The transaction can be sent again in a few minutes).</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>91</td>
+                      <td>Issuer or switch is inoperative. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>92</td>
+                      <td>Financial institution or intermediate network facility cannot be found for routing</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>93</td>
+                      <td>Transaction cannot be completed. Violation of law</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>94</td>
+                      <td>Duplicate transmission</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>95</td>
+                      <td>Reconcile error</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>96</td>
+                      <td>System malfunction</td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>97</td>
+                      <td>Advises that reconciliation totals have been reset</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>98</td>
+                      <td>MAC error</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>99</td>
+                      <td>Reserved for national use</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>EA</td>
+                      <td>response text varies depending on reason for error</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>EG</td>
+                      <td>response text varies depending on reason for error</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>EM</td>
+                      <td>Error at the Merchant Server level</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N1</td>
+                      <td>Unknown Error (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N2</td>
+                      <td>Bank Declined Transaction (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N</td>
+                      <td>No Reply from Bank (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N4</td>
+                      <td>Expired Card (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N5</td>
+                      <td>Insufficient Funds (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N6</td>
+                      <td>Error Communicating with Bank (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N7</td>
+                      <td>Payment Server System Error (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N8</td>
+                      <td>Transaction Type Not Supported (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>N9</td>
+                      <td>Bank declined transaction (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NA</td>
+                      <td>Transaction aborted (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NC</td>
+                      <td>Transaction cancelled (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>ND</td>
+                      <td>Deferred Transaction (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NF</td>
+                      <td>3D Secure Authentication Failed (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NI</td>
+                      <td>Card Security Code Failed (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NL</td>
+                      <td>Transaction Locked (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NN</td>
+                      <td>Cardholder is not enrolled in 3D Secure (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NP</td>
+                      <td>Transaction is Pending (NZ Only)</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NR</td>
+                      <td>Retry Limits Exceeded, Transaction Not Processed (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NT</td>
+                      <td>Address Verification Failed (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NU</td>
+                      <td>Card Security Code Failed (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>NV</td>
+                      <td>Address Verification and Card Security Code Failed (NZ Only)</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Q1</td>
+                      <td>Unknown Buyer</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Q2</td>
+                      <td>Transaction Pending</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Q3</td>
+                      <td>Payment Gateway Connection Error. </td>
+                      <td>3</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>Q4</td>
+                      <td>Payment Gateway Unavailable</td>
+                      <td>3</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>Q8</td>
+                      <td>Error verifying 3D Secure enrolment</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Q9</td>
+                      <td>3D Secure authentication failed</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QA</td>
+                      <td>Invalid parameters</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QB</td>
+                      <td>Order type not currently supported</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QC</td>
+                      <td>Invalid Order Type</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QD</td>
+                      <td>Invalid Payment Amount - Payment amount less than minimum/exceeds maximum allowed limit</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QE</td>
+                      <td>Internal Error</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QF</td>
+                      <td>Transaction Failed</td>
+                      <td>3</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>QG</td>
+                      <td>Unknown Customer Order Number</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QH</td>
+                      <td>Unknown Customer Username</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QI</td>
+                      <td>Transaction incomplete - contact Westpac to confirm reconciliation</td>
+                      <td>2</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>QJ</td>
+                      <td>Incorrect Customer Password</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QK</td>
+                      <td>Unknown Customer Merchant</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QL</td>
+                      <td>Business Group not configured for customer</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QM</td>
+                      <td>Payment Instrument not configured for customer</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QN</td>
+                      <td>Configuration Error</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QO</td>
+                      <td>Missing Payment Instrument</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QP</td>
+                      <td>Missing Supplier Account</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QQ</td>
+                      <td>Invalid Credit Card \ Invalid Credit Card Verification Number</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QR</td>
+                      <td>Transaction Retry</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QS</td>
+                      <td>Transaction Successful</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QT</td>
+                      <td>Invalid currency</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QU</td>
+                      <td>Unknown Customer IP Address</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QV</td>
+                      <td>Invalid Capture Order Number specified for Refund, Refund amount exceeds capture amount, or Previous capture was not approved</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QW</td>
+                      <td>Invalid Reference Number</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QX</td>
+                      <td>Network Error has occurred</td>
+                      <td>3</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>QY</td>
+                      <td>Card Type Not Accepted</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>QZ</td>
+                      <td>Zero value transaction</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>RA</td>
+                      <td><em>response text varies depending on reason for rejection</em></td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>RG</td>
+                      <td><em>response text varies depending on reason for rejection</em></td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>RM</td>
+                      <td>Rejected at the Merchant Server level</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>No</td>
+                      <td>Short for 'No Account', this response code indicates the QuickVault account used for the transaction was not found.</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <section>
+                <h2 id="00-approved">00 - Approved</h2>
+                <p>This indicates that the transaction has been authorised.</p>
+                <p>What authorisation DOES mean:-</p>
+                <ul>
+                  <li>The card number is valid</li>
+                  <li>The card has not been reported lost or stolen (although it may in fact be lost, stolen or compromised [card details improperly obtained or copied] and the card owner is unaware)</li>
+                  <li>There are sufficient funds available to cover the transaction.</li>
+                </ul>
+                <p>What authorisation DOES NOT mean:-</p>
+                <ul>
+                  <li>An authorisation does NOT confirm that the person providing the card number is the legitimate card holder. The risk remains that the person providing the credit card number has either stolen or improperly obtained the card.</li>
+                </ul>
+                <div class="alert alert-warning" role="alert">
+                  <span class="icon mr-2" data-icon="alert"><svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="title-icon-alert" width="24" height="24" viewBox="0 0 24 24" focusable="false">
+  <title id="title-icon-alert" lang="en">Alert</title>
+  <path fill="#575f65" class="icons-background" fill-rule="evenodd" d="M1.0004095,24 C0.653409497,24 0.332409497,23.8196664 0.149409497,23.5241196 C-0.0325905031,23.2285729 -0.0495905031,22.8598908 0.105409497,22.5503181 L11.1054095,0.509542654 C11.4454095,-0.169713971 12.5554095,-0.169713971 12.8944095,0.509542654 L23.8944095,22.5503181 C24.0504095,22.8598908 24.0334095,23.2285729 23.8504095,23.5241196 C23.6684095,23.8196664 23.3474095,24 23.0004095,24 L1.0004095,24 Z M2.6184095,22.0001002 L21.3824095,22.0001002 L12.0004095,3.1975154 L2.6184095,22.0001002 Z M11,20 L11,18 L13,18 L13,20 L11,20 Z M11,16 L11,10 L13,10 L13,16 L11,16 Z"></path>
+</svg></span>
+                  <span class="align-middle"> Although it is important to obtain an authorisation for each transaction, it does not protect you from the risk of Fraud or charge-back. The risk of fraud remains even though authorisation has been obtained. </span>
+                </div>
+              </section>
+              <section>
+                <h2 id="01-refer-to-card-issuer">01 - Refer to card issuer</h2>
+                <p>This indicates an error or problem from the card issuer. The problem may be related to the card holder's account. This response code is often a result of one of the following:-</p>
+                <ul>
+                  <li>Suspected Fraud</li>
+                  <li>Insufficient Funds</li>
+                  <li>Stolen Card</li>
+                  <li>Expired Card</li>
+                  <li>Invalid CVN</li>
+                  <li>Any other rule imposed by the card issuer that causes a decline (e.g. daily limit exceeded, minimum monthly payment not made, duplicate transaction suspected, etc).</li>
+                </ul>
+              </section>
+              <section>
+                <h2 id="03-invalid-merchant">03 - Invalid merchant</h2>
+                <p>This can indicate a problem with Westpac's merchant configuration. This can also be returned for AMEX transactions when there is a problem with the setup at American Express. This code can be returned from an issuing bank if they don't like the acquiring bank. An example of this would be someone trying to pay their speeding fine with an overseas credit card. The overseas issuing bank would return a 03, indicating that they wouldn't allow the transaction over the internet for an Australian bank.</p>
+              </section>
+              <section>
+                <h2 id="04-pickup-card-">04 - Pickup Card.</h2>
+                <p>This can mean the card has been reported as lost or stolen. The card holder should contact their issuing bank.</p>
+              </section>
+              <section>
+                <h2 id="05-do-not-honour">05 - Do not honour</h2>
+                <p>This indicates an error or problem from the card issuer. The problem may be related to the card holder's account. In general the reason for this response code may be any of the following:-</p>
+                <ul>
+                  <li>Suspected Fraud</li>
+                  <li>Insufficient Funds</li>
+                  <li>Stolen Card</li>
+                  <li>Expired Card</li>
+                  <li>Invalid CVN</li>
+                  <li>Any other rule imposed by the card issuer that causes a decline (e.g. daily limit exceeded, minimum monthly payment not made, duplicate transaction suspected, etc).</li>
+                </ul>
+              </section>
+              <section>
+                <h2 id="08-honor-with-identification">08 - Honor with identification</h2>
+                <p>This indicates that the transaction has been authorised.</p>
+                <p>What authorisation DOES mean:-</p>
+                <ul>
+                  <li>The card number is valid</li>
+                  <li>The card has not been reported lost or stolen (although it may in fact be lost, stolen or compromised [card details improperly obtained or copied] and the card owner is unaware)</li>
+                  <li>There are sufficient funds available to cover the transaction.</li>
+                </ul>
+                <p>What authorisation DOES NOT mean:-</p>
+                <ul>
+                  <li>An authorisation does NOT confirm that the person providing the card number is the legitimate card holder. The risk remains that the person providing the credit card number has either stolen or improperly obtained the card.</li>
+                </ul>
+                <div class="alert alert-warning" role="alert">
+                  <span class="icon mr-2" data-icon="alert"><svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="title-icon-alert" width="24" height="24" viewBox="0 0 24 24" focusable="false">
+  <title id="title-icon-alert" lang="en">Alert</title>
+  <path fill="#575f65" class="icons-background" fill-rule="evenodd" d="M1.0004095,24 C0.653409497,24 0.332409497,23.8196664 0.149409497,23.5241196 C-0.0325905031,23.2285729 -0.0495905031,22.8598908 0.105409497,22.5503181 L11.1054095,0.509542654 C11.4454095,-0.169713971 12.5554095,-0.169713971 12.8944095,0.509542654 L23.8944095,22.5503181 C24.0504095,22.8598908 24.0334095,23.2285729 23.8504095,23.5241196 C23.6684095,23.8196664 23.3474095,24 23.0004095,24 L1.0004095,24 Z M2.6184095,22.0001002 L21.3824095,22.0001002 L12.0004095,3.1975154 L2.6184095,22.0001002 Z M11,20 L11,18 L13,18 L13,20 L11,20 Z M11,16 L11,10 L13,10 L13,16 L11,16 Z"></path>
+</svg></span>
+                  <span class="align-middle"> Although it is important to obtain an authorisation for each transaction, it does not protect you from the risk of Fraud or charge-back. The risk of fraud remains even though authorisation has been obtained. </span>
+                </div>
+              </section>
+              <section>
+                <h2 id="12-invalid-transaction">12 - Invalid transaction</h2>
+                <p>This code is often returned from the issuer when they do not accept the transaction. This can possibly be when a transaction for the same amount and merchant is attempted multiple times quickly for the same card. The card holder should contact their issuing bank.</p>
+              </section>
+              <section>
+                <h2 id="14-invalid-card-number-no-such-number-">14 - Invalid card number (no such number)</h2>
+                <p>This code indicates that the card number does not exist. Also returned code if an AMEX card is used, but the merchant is not setup for AMEX cards.</p>
+              </section>
+              <section>
+                <h2 id="22-suspected-malfunction">22 - Suspected Malfunction</h2>
+                <p>This code normally indicates that the card number was invalid.</p>
+              </section>
+              <section>
+                <h2 id="42-no-universal-account">42 - No Universal Account</h2>
+                <p>This error is returned from some issuers when the credit account does not exist at the issuing bank. This situation is similar to the 14 response code.</p>
+              </section>
+              <section>
+                <h2 id="54-expired-card">54 - Expired Card</h2>
+                <p>This error is returned when the credit card has expired. Check that the expiry date is correct, and attempt the transaction again. If the transaction still does not work, check with the card holder to see if they have a new card with a new expiry date.</p>
+              </section>
+              <section>
+                <h2 id="61-exceeds-withdrawal-amount-limits">61 - Exceeds withdrawal amount limits</h2>
+                <p>This error is returned when the card holder does not have enough credit to pay the specified amount. Ask the card holder if they have another card to use for the payment.</p>
+              </section>
+              <section>
+                <h2 id="91-issuer-or-switch-is-inoperative">91 - Issuer or switch is inoperative</h2>
+                <p>This code is used to indicate that the next party in a credit card transaction timed out and the transaction has been reversed. This may happen between QuickStream and Westpac, or further down the chain. This response may also be returned for pre-authorisation transactions that are manually reversed.</p>
+              </section>
+              <section>
+                <h2 id="92-financial-institution-or-intermediate-network-facility-cannot-be-found-for-routing">92 - Financial institution or intermediate network facility cannot be found for routing</h2>
+                <p>The card number is incorrect. The first 6 digits of the credit card number indicate which bank issued the card. These are used for routing credit card requests through the credit card network to the issuing bank. This error indicates that there is no bank that corresponds to the first 6 digits of the card number.</p>
+              </section>
+              <section>
+                <h2 id="no-no-account">No - No Account</h2>
+                <p>The QuickVault account used for the transaction was not found or is not enabled. Please check that the QuickVault account exists and is enabled. You can do this in via QuickGateway or in QuickStream Portal.</p>
+              </section>
+              <section>
+                <h2 id="q3-payment-gateway-unavailable">Q3 - Payment Gateway Unavailable</h2>
+                <p>The downstream credit card gateway was unavailable. The credit card transaction was not attempted and the transaction record will not exist. When you receive this response code, the transaction will not exist in QuickStream.</p>
+              </section>
+              <section>
+                <h2 id="qi-transaction-incomplete">QI - Transaction incomplete</h2>
+                <p>This status code indicates that a request message was sent to the QuickStream server but no response was received within the timeout period.</p>
+              </section>
+              <section>
+                <h2 id="qy-card-type-not-accepted">QY - Card Type not accepted</h2>
+                <p>The QY error code indicates that the merchant is not enabled for the particular card scheme. This error code is normally returned for American Express and Diners Club cards, or when a UnionPay debit card is used. Only UnionPay credit cards are supported.</p>
+              </section>
+              <section>
+                <h1 id="bank-account-transaction-response-codes">Bank account transaction response codes</h1>
+                <p><em>(aka Direct Entry Transaction Response Codes)</em></p>
+                <p>In all cases where the response code requires the account holder to contact their bank, it will help if they can provide a date and amount of the failed attempted transaction and specifically ask the bank why they returned that status for the attempted transaction. Otherwise the issuing bank staff may just check the available funds in the account.</p>
+                <p>Successful Direct Entry transactions will generally have a response code of G - WBC Exception Processing released successfully.</p>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Summary Code</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>0</td>
+                      <td>Approved. Transactions running on a 3-Day settlement may be reported with summary 0 before the transaction is rejected by customer's bank. When working with a 3-Day settlement period, you should monitor the transaction over the full settlement period.</td>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td>Declined</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Processing</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Rejected</td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Description</th>
+                      <th>Summary Code</th>
+                      <th>Soft Decline</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Zero</td>
+                      <td>Zero</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>No Account</td>
+                      <td>No Account Registered</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>Duplicate</td>
+                      <td>Duplicate Transaction</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>New</td>
+                      <td>New</td>
+                      <td>2</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>1</td>
+                      <td>Invalid BSB Number</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Payment stopped.</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Account Closed. </td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>4</td>
+                      <td>Customer Deceased</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>5</td>
+                      <td>No Account/Incorrect Account#.</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>6</td>
+                      <td>Refer to Customer. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>7</td>
+                      <td>No form PDC held</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>8</td>
+                      <td>Invalid User ID Number</td>
+                      <td>1</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>9</td>
+                      <td>Other. </td>
+                      <td>1</td>
+                      <td>Yes</td>
+                    </tr>
+                    <tr>
+                      <td>Success</td>
+                      <td>Approved or completed successfully</td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>R</td>
+                      <td>WBC Exception Processing Error - see description</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>G</td>
+                      <td>WBC Exception Processing released successfully. </td>
+                      <td>0</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>C</td>
+                      <td>WBC Exception Processing - Cancelled</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>D</td>
+                      <td>WBC Exception Processing - Recalled</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td>No</td>
+                      <td>Short for 'No Account', this response code indicates the QuickVault account used for the transaction was not found.</td>
+                      <td>3</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+              <section>
+                <h2 id="2-payment-stopped">2 - Payment Stopped</h2>
+                <p>The account holder has requested that their bank stop any direct debit transactions. Contact the customer to determine an alternate payment mechanism, or if they wish to stop their service.</p>
+              </section>
+              <section>
+                <h2 id="3-account-closed">3 - Account Closed</h2>
+                <p>The account holder has closed their account. Contact your customer to ask for new account details.</p>
+              </section>
+              <section>
+                <h2 id="5-no-account-incorrect-account-">5 - No Account/Incorrect Account#</h2>
+                <p>Contact your customer to determine if the BSB and account number you have is correct. It may be useful for them to fax you the first page of their bank account statement so that you can check you have the correct BSB and account number.</p>
+              </section>
+              <section>
+                <h2 id="6-refer-to-customer">6 - Refer to Customer</h2>
+                <p>Contact your customer to determine if they have sufficient funds in their account, if the BSB and account number you have is correct, and if their account allows direct debit transactions.</p>
+              </section>
+              <section>
+                <h2 id="9-other">9 - Other</h2>
+                <p>The banks use this response code as they see fit. If you receive this response code for a customer and you have never had a successful debit for that customer, first check the BSB and account number. This could indicate one of the following:</p>
+                <ul>
+                  <li>Account does not allow Direct Debit</li>
+                  <li>Incorrect Account Number</li>
+                  <li>Insufficient Funds</li>
+                  <li>Suspected Fraud</li>
+                  <li>Any other rule imposed by the account holder's bank that causes a decline (e.g. daily limit exceeded, duplicate transaction suspected, etc)</li>
+                </ul>
+              </section>
+              <section>
+                <h2 id="g-wbc-exception-processing-released-successfully">G - WBC Exception Processing released successfully</h2>
+                <p>The transaction is being processed by Westpac. If the debit is from another bank, Westpac has sent the transaction to that bank. <strong>When a direct entry transaction is successful, it remains in this response code.</strong> When a transaction is declined and returned, the response will be set to a different response code.</p>
+              </section>
+            </div>
+          </div>
+          <!-- End of .page-wrapper-->
+        </main>
+      </div>
+      <footer id="main-footer">
+       
+          <div class="col-lg-3">
+            <div id="footer-logo" class="float-right"></div>
+          </div>
+        
+      </footer>
+    </div>
+        
+         </body>
+    </ui:define>
+
+</ui:composition>

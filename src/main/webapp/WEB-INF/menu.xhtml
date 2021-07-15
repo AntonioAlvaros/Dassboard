@@ -1,0 +1,35 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pu="http://primefaces.org/ultima">
+    
+    <h:form id="menuform"> 
+        <div class="layout-menu #{guestPreferences.menuClass}">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
+                        <div class="profile">
+                            <div class="profile-image"></div>
+                            <a id="profile-options" href="#">
+                                <span class="profile-name">TRANSRED</span>
+                            </a>
+                        </div>
+                    </ui:fragment>
+                    
+                    <pu:menu widgetVar="me">
+                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:menuitem id="um_dashboard_debit" value="Débito" icon="&#xe870;" outcome="/dashboard_debit"/>
+                        <p:menuitem id="um_dashboard_credit" value="Crédito" icon="&#xe870;" outcome="/dashboard_credit"/>
+                        <p:menuitem id="um_dashboard_p2p" value="P2P" icon="&#xe7fb;" outcome="/dashboard_p2p"/>
+                        <p:menuitem id="um_dashboard_p2c" value="P2C" icon="&#xe0af;" outcome="/dashboard_p2c"/>
+                        <p:menuitem id="um_dashboard_c2p" value="C2P" icon="&#xe407;" outcome="/dashboard_c2p"/>
+                        <p:menuitem id="um_doc" value="Documentación" icon="&#xE880;" outcome="/docs"/>
+                    </pu:menu>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

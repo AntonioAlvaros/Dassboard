@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui" template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="help-wrapper">
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <div class="card help-wrapper-card">
+                        <div class="help-header">
+                            <p:graphicImage name="images/extensions/help-header@2x.jpg" library="ultima-layout"
+                                style="width: 100%" />
+                            <h1>Frequently Asked Questions</h1>
+                            <div class="search">
+                                <i class="material-icons">
+                                    search
+                                </i>
+                                <!-- <input type="text" placeholder="Search for anwers" /> -->
+                                <p:autoComplete id="acSimple" placeholder="Search for anwers" value="#{autoCompleteView.txt1}" completeMethod="#{autoCompleteView.completeText}" />
+                            </div>
+                        </div>
+                        <div class="help-content">
+                            <div class="card ">
+                                <p:accordionPanel multiple="false" styleClass="main-accordion" >
+                                    <p:tab>
+                                        <f:facet name="title">
+                                            <i class="material-icons">
+                                                book
+                                            </i>
+                                            <div class="accordion-title">
+                                                <h1>The Basics</h1>
+                                                <p>4 articles in this collection</p>
+                                            </div>
+
+
+                                        </f:facet>
+                                        <p:outputPanel>
+                                            <div class="questions">
+                                                <p:accordionPanel multiple="false" styleClass="sub-accordion">
+                                                    <p:tab title="Which do I need to develop a SaaS application?">
+                                                        <h:outputText
+                                                            value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pellentesque ligula dolor, pretium tincidunt libero sodales in. Integer at eros posuere, elementum felis a, laoreet libero. In sed nunc accumsan, dapibus nibh sit amet, aliquet ipsum. " />
+                                                    </p:tab>
+                                                    <p:tab title="I’m a freelancer/agency. Can I use the item for an end product I’m doing for a client?">
+                                                        <h:outputText
+                                                            value="Aliquam erat volutpat. Nulla hendrerit, arcu non lobortis fringilla, ipsum orci condimentum risus, ac hendrerit mauris justo eget lectus." />
+                                                    </p:tab>
+                                                    <p:tab title="We’re a reseller, are we able to purchase a license on behalf of our client? ">
+                                                        <h:outputText
+                                                            value="Ut leo tellus, imperdiet tristique turpis eu, eleifend rhoncus dolor. Fusce eu feugiat urna. Nullam venenatis nisi varius justo ultrices, non aliquam nisi dapibus. Duis viverra nulla ipsum, ac laoreet mauris dapibus eu. " />
+                                                    </p:tab>
+                                                    <p:tab title="Is there a recurring fee or is it perpetual? ">
+                                                        <h:outputText
+                                                            value="Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur eu consequat libero. Donec euismod facilisis pulvinar. " />
+                                                    </p:tab>
+                                                </p:accordionPanel>
+                                            </div>
+                                        </p:outputPanel>
+
+                                    </p:tab>
+
+                                </p:accordionPanel>
+                            </div>
+                            <div class="card ">
+                                <p:accordionPanel multiple="false" styleClass="main-accordion" activeIndex="-1">
+                                    <p:tab>
+                                        <f:facet name="title">
+                                            <i class="material-icons">
+                                                book
+                                            </i>
+                                            <div class="accordion-title">
+                                                <h1>Questions About Licenses</h1>
+                                                <p>3 articles in this collection</p>
+                                            </div>
+
+
+                                        </f:facet>
+                                        <p:outputPanel>
+                                            <div class="questions">
+                                                <p:accordionPanel multiple="false" styleClass="sub-accordion">
+                                                    <p:tab title="Pellentesque faucibus convallis dolor ?">
+                                                        <h:outputText
+                                                            value="Donec facilisis, magna aliquam venenatis lobortis, nulla diam euismod orci, ac pharetra risus mi eget mauris. Praesent eleifend." />
+                                                    </p:tab>
+                                                    <p:tab title="Sed rhoncus, lacus a volutpat elementum ?">
+                                                        <h:outputText
+                                                            value="Cras vel ullamcorper metus, vel faucibus ex. Nullam finibus ligula quis dolor aliquet, quis tempor lectus posuere. In sed mattis dui. Interdum et malesuada fames ac ante ipsum primis in faucibus." />
+                                                    </p:tab>
+                                                    <p:tab title="Fusce porttitor augue turpis, vitae malesuada elit condimentum ?">
+                                                        <h:outputText
+                                                            value="Proin dapibus ipsum eget libero elementum, a consectetur tortor tristique. Suspendisse potenti. Aenean dictum blandit mauris, a sollicitudin ex sagittis sit amet. " />
+                                                    </p:tab>
+                                                </p:accordionPanel>
+                                            </div>
+                                        </p:outputPanel>
+
+                                    </p:tab>
+
+                                </p:accordionPanel>
+                            </div>
+                            <div class="card ">
+                                <p:accordionPanel multiple="false" styleClass="main-accordion" activeIndex="-1">
+                                    <p:tab>
+                                        <f:facet name="title">
+                                            <i class="material-icons">
+                                                book
+                                            </i>
+                                            <div class="accordion-title">
+                                                <h1>Questions About Frameworks</h1>
+                                                <p>6 articles in this collection</p>
+                                            </div>
+
+
+                                        </f:facet>
+                                        <p:outputPanel>
+                                            <div class="questions">
+                                                <p:accordionPanel multiple="false" styleClass="sub-accordion">
+                                                    <p:tab title="Lorem ipsum dolor sit amet, consectetur adipiscing elit ?">
+                                                        <h:outputText
+                                                            value="Vivamus in tortor arcu. Morbi ornare ex mi, sit amet pretium nibh sollicitudin eu." />
+                                                    </p:tab>
+                                                    <p:tab title="Sed ut massa accumsan, consequat ligula sit amet, dignissim diam ?">
+                                                        <h:outputText
+                                                            value="Curabitur elit enim, scelerisque at eros ac, sagittis volutpat ante. Mauris ac accumsan lorem, in viverra turpis." />
+                                                    </p:tab>
+                                                    <p:tab title=" Vivamus lobortis lacinia eros vel viverra. Vestibulum molestie tortor metus, ac dapibus massa sodales eget ?">
+                                                        <h:outputText
+                                                            value="Donec ut justo sit amet erat eleifend vulputate ut at mi. " />
+                                                    </p:tab>
+                                                    <p:tab title="Donec finibus tristique leo, consectetur tincidunt velit ?">
+                                                        <h:outputText
+                                                            value="Maecenas mattis malesuada lobortis. Praesent hendrerit eros quam. Praesent volutpat mauris ut dignissim maximus." />
+                                                    </p:tab>
+                                                    <p:tab title="Praesent suscipit, magna at lacinia tempor ?">
+                                                        <h:outputText
+                                                            value="Velit leo commodo magna, at pharetra risus libero vitae urna." />
+                                                    </p:tab>
+                                                    <p:tab title="Nulla auctor urna eget purus placerat maximus. Interdum ?">
+                                                        <h:outputText
+                                                            value="Et malesuada fames ac ante ipsum primis in faucibus." />
+                                                    </p:tab>
+                                                </p:accordionPanel>
+                                            </div>
+                                        </p:outputPanel>
+
+                                    </p:tab>
+
+                                </p:accordionPanel>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

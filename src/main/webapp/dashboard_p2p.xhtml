@@ -1,0 +1,466 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Dasboard Transaccional</ui:define>
+
+   <ui:define name="head">
+        <script type="text/javascript">
+        function skinChart() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                borderWidth: 0.1,
+                borderColor: 'bdbdbd',
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 1,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinBar() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                borderWidth: 0.1,
+                borderColor: 'bdbdbd',
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 1,
+                renderer: $.jqplot.BarRenderer,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinArea() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#FFC107', '#4CAF50'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                borderWidth: 0.1,
+                borderColor: 'bdbdbd',
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 1,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinBubble() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 1,
+                renderer: $.jqplot.BubbleRenderer,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinZoom() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 1,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinPie() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                rendererOptions: {
+                    textColor: '#666F77',
+                }
+            };
+            this.cfg.seriesDefaults = {
+                renderer: $.jqplot.PieRenderer,
+                shadow: false,
+                lineWidth: 1,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinDonut() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                rendererOptions: {
+                    textColor: '#666F77',
+                }
+            };
+            this.cfg.seriesDefaults = {
+                renderer: $.jqplot.DonutRenderer,
+                shadow: false,
+                lineWidth: 1,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinBarAndLine() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#03A9F4', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                borderWidth: 0.1,
+                borderColor: 'bdbdbd',
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 5,
+                renderer: $.jqplot.BarRenderer,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+
+        function skinMeterGauge() {
+            this.cfg.title = '';
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth: 5,
+                renderer: $.jqplot.MeterGaugeRenderer,
+                rendererOptions: {
+                    shadow: false,
+                    min: 100,
+                    max: 800,
+                    intervals: [200, 300, 400, 500, 600, 700, 800],
+                    intervalColors: ['#03A9F4', '#E91E63', '#4CAF50', '#FFC107', '#03A9F4', '#E91E63', '#4CAF50']
+                }
+            }
+        }
+
+        function skinMultiAxis() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = ['#4CAF50', '#FFC107'];
+            this.cfg.grid = {
+                background: '#ffffff',
+                borderColor: '#ffffff',
+                gridLineColor: '#F5F5F5',
+                shadow: false
+            };
+            this.cfg.axesDefaults = {
+                borderWidth: 0.1,
+                borderColor: 'bdbdbd',
+                rendererOptions: {
+                    textColor: '#666F77'
+                }
+            };
+            this.cfg.seriesDefaults = {
+                shadow: false,
+                lineWidth:1,
+                renderer: $.jqplot.BarRenderer,
+                markerOptions: {
+                    shadow: false,
+                    size: 7,
+                    style: 'circle'
+                }
+            }
+        }
+        </script>
+        <style type="text/css">
+            .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
+                color: #757575; 
+            }
+            
+            table.jqplot-table-legend {
+                background-color: #ffffff;
+                color: #757575;
+                border-color: #bdbdbd;
+            }
+        </style>
+    </ui:define>
+
+    
+    <ui:define name="content">
+
+   <div>
+            <div class="ui-messages-warn ui-corner-all">
+                <div class="">
+             
+                    <span class="ui-messages-warn-detail">            
+                        <p:graphicImage name="images/extensions/flag-us@2x.png" library="ultima-layout" style="width: 1%" />
+                       <p:spacer width="10" height="10"/>
+                        <h:outputText class="txt_count_amount-counst"  id="txt_count_amount_reversess" value="#{pollViewP2P.information}">    
+
+                        </h:outputText>
+                    </span>
+
+
+                </div>
+           
+            </div>
+        </div>
+
+        
+        <div class="ui-g dashboard">
+            
+                 <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-1">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xE86C;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Aprobadas</span>
+                        <span class="colorbox-count">
+                            <h:outputText class="colorbox-count"  id="txt_count" value="#{pollViewP2P.approved}"/>
+                        </span>
+                        
+                         <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_count"/>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-2">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xe565;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Reversadas</span>
+                        <h:outputText class="colorbox-count"  id="txt_reversed" value="#{pollViewP2P.reversed}"/>
+                        <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_reversed"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-3">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xE160;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Rechazadas</span>
+                        <h:outputText class="colorbox-count"  id="txt_reject" value="#{pollViewP2P.rejected}"/>
+                        <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_reject"/>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6 ui-lg-3">
+                <div class="ui-g card colorbox colorbox-4">
+                    <div class="ui-g-4">
+                        <i class="material-icons">&#xe426;</i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">Time Out</span>
+                        <h:outputText class="colorbox-count"  id="txt_timeOut" value="#{pollViewP2P.timeout}"/>
+                        <p:poll  interval="8" listener="#{pollViewP2P.increment}" update="txt_timeOut"/>
+                    </div>
+                </div>
+            </div>
+            
+             <div class="ui-g-12 ui-md-4">
+                <div class="card">
+                    <h1 class="centerText">Motivos de Rechazos</h1>
+                    <p:poll interval="5" update="pie" />
+                    <p:chart id="pie" type="pie" model="#{chartDemoViewP2P.pieModel1}" responsive="true" />
+                </div>
+             </div>
+            
+            <div class="ui-g-12 ui-md-4">
+                <div class="card">
+                    <h1 class="centerText">Transacciones por Interfaces</h1>
+                     <p:poll interval="5" update="bar" />
+                    <p:chart id="bar" type="bar" model="#{chartDemoViewP2P.barModel}" responsive="true"/>
+                </div>
+             </div>
+            
+               <div class="ui-g-12 ui-md-4">
+                <div class="card">
+                    <h1 class="centerText">Ultimos 3 Meses</h1>
+                     <p:poll interval="5" update="bar2" />
+                    <p:chart id="bar2" type="bar" model="#{chartDemoViewP2P.barModel1}" responsive="true"/>
+                </div>
+             </div>
+ 
+            <div class="ui-g-12 ui-md-4">
+                <div class="card overview">
+                    <div class="overview-content clearfix">
+                        <span class="overview-title">Transacciones Aprobadas</span>
+                        <span class="overview-badge">Monto</span>
+                       <span class="overview-detail">                        
+                            <h:outputText class="txt_count_amount-count"  id="txt_count_amount" value="#{pollViewP2P.sumApproved}">                       
+                                
+                                         <f:convertNumber pattern="#000,000.00" />
+                            </h:outputText>
+                                
+                        </span>
+                         
+
+                         <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_count_amount"/>
+                        
+                        
+                    </div>
+                    <div class="overview-footer">
+                         <p:graphicImage name="images/dashboard/progress-approved.svg" library="ultima-layout" style="width: 100%" />
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <div class="card overview">
+                    <div class="overview-content clearfix">
+                        <span class="overview-title">Transacciones Rechazadas</span>
+                        <span class="overview-badge">Monto</span>
+                                  <span class="overview-detail">                        
+                                      <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reject" value="#{pollViewP2P.sumReject}">                       
+                                           <f:convertNumber pattern="#000,000.00" />
+                            </h:outputText>
+                        </span>
+                         
+
+                         <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_count_amount_reject"/>
+                         
+                         
+                         
+                        
+                    </div>
+                    <div class="overview-footer">
+                        <p:graphicImage name="images/dashboard/progress-reject.svg" library="ultima-layout" style="width: 100%" />
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                <div class="card overview">
+                    <div class="overview-content clearfix">
+                        <span class="overview-title">Transaciones Reversadas</span>
+                        <span class="overview-badge">Monto</span>
+                                        <span class="overview-detail">                        
+                                            <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reverse" value="#{pollViewP2P.sumReversed}">    
+                                                    <f:convertNumber pattern="#000,000.00" />
+                                                </h:outputText>
+                        </span>
+                         
+
+                         <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_count_amount_reverse"/>
+                        
+                    </div>
+                    <div class="overview-footer">
+                        <p:graphicImage name="images/dashboard/progress-reversed.svg" library="ultima-layout" style="width: 100%" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+     
+
+     
+
+    </ui:define>
+</ui:composition>

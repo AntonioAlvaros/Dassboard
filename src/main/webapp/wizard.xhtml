@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>TRANSRED Wizard</title>
+
+        <h:outputScript name="js/layout-animations.js" library="ultima-layout" />
+        <script type="text/javascript">
+        //<![CDATA[
+            var Wizard = {
+                init: function() {
+                    this.wizardContent = $('.wizard-content');
+                    if (this.wizardContent.length) {
+                        this.wizardCard = this.wizardContent.find('.wizard-card');
+                        this.tabs = this.wizardCard.find('> .wizard-card-header .tab');
+                        this.tabBar = this.wizardCard.find('> .wizard-card-header .tab-bar');
+
+                        var continueButton = $('.continue-button'),
+                            $this = this;
+
+                        this.tabBar.css('width', (100 / this.tabs.length) + '%');
+
+                        this.tabs.off('click.wizard-tab').on('click.wizard-tab', function() {
+                            $this.openNextTab($(this));
+                        });
+                    
+                        continueButton.off('click.cbutton').on('click.cbutton', function() {
+                            var content = $(this).closest('.wizard-card-content'),
+                                index = content.index(),
+                                nextTab = $this.tabs.eq(index);
+                                
+                            content.find('.ink').remove();
+                            $this.openNextTab(nextTab);
+                        });
+                    }
+                },
+
+                openNextTab: function(tab) {
+                    var index = tab.index();
+
+                    if (!tab.hasClass('selected-tab')) {
+                        tab.siblings('.tab').removeClass('selected-tab').end().addClass('selected-tab');
+                        this.wizardCard.children('.wizard-card-content').filter('.active-content').removeClass('active-content').end().eq(index).addClass('active-content');
+                        this.tabBar.css('left', (index * (100 / this.tabs.length)) + '%');
+                    }
+                },
+
+                selectOrderInfo: function(buttonSelector, orderSelector) {
+                    var button = $(buttonSelector),
+                        selectedOrder = $(orderSelector),
+                        content = button.closest('.wizard-card-content'),
+                        index = content.index(),
+                        nextTab = this.tabs.eq(index);
+
+                    content.find('.ink').remove();
+                    selectedOrder.siblings().removeClass('selected-order').end().addClass('selected-order');
+                    this.openNextTab(nextTab);
+                }
+            }
+
+
+            $(function() {
+                Wizard.init();
+            });            
+        //]]>
+        </script>
+    </h:head>
+
+    <h:body styleClass="wizard-body">
+
+        <div class="wizard-wrapper">
+            <div class="wizard-topbar">
+                <div class="logo"></div>
+                <div class="profile">
+                    <div class="profile-text">
+                        <h1>Welcome to Ultima</h1>
+                        <p>Please complete steps to register</p>
+                    </div>
+                    <p:graphicImage styleClass="profile-image" name="images/extensions/flag-us@2x.png"
+                        library="ultima-layout" />
+                </div>
+            </div>
+            <div class="wizard-content">
+                <div class="wizard-card">
+                    <div class="wizard-card-header">
+                        <div class="ui-g">
+                            <div class="ui-g-4 tab selected-tab register-tab">
+                                <div class="icon">
+                                    <i class="material-icons">
+                                        fingerprint
+                                    </i>
+                                </div>
+                                <div class="title">
+                                    REGISTER
+                                </div>
+                            </div>
+                            <div class="ui-g-4 tab tier-tab">
+                                <div class="icon">
+                                    <i class="material-icons">
+                                        layers
+                                    </i>
+                                </div>
+                                <div class="title">
+                                    CHOOSE TIER
+                                </div>
+                            </div>
+                            <div class="ui-g-4 tab payment-tab">
+                                <div class="icon">
+                                    <i class="material-icons">
+                                        shopping_cart
+                                    </i>
+                                </div>
+                                <div class="title">
+                                    PAYMENT
+                                </div>
+                            </div>
+                            <div class="tab-bar"></div>
+                        </div>
+                    </div>
+                    <div class="wizard-card-content active-content register ">
+                        <div class="ui-g ">
+                            <div class="ui-g-12  ui-lg-6">
+                                <h1>ESSENTIAL INFORMATION</h1>
+                                <div class="forms">
+                                    <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon">
+                                            <i class="material-icons">account_circle</i>
+                                        </span>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText />
+                                            <label>Username</label>
+                                        </h:panelGroup>
+                                    </div>
+                                    <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon">
+                                            <i class="material-icons">account_circle</i>
+                                        </span>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:inputText />
+                                            <label>Email</label>
+                                        </h:panelGroup>
+                                    </div>
+                                    <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon">
+                                            <i class="material-icons">fingerprint</i>
+                                        </span>
+                                        <h:panelGroup styleClass="md-inputfield">
+                                            <p:password />
+                                            <label>Password</label>
+                                        </h:panelGroup>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-lg-6">
+                                <h1>OPTIONAL</h1>
+                                <div class="forms">
+                                    <p:selectOneMenu id="timezone" style="margin-bottom:10px;">
+                                        <f:selectItem itemLabel="Select Time Zone" itemValue="" />
+                                        <f:selectItem itemLabel="UTC-12.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-11.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-10.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-09.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-09.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-08.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-07.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-06.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-05.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-04.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-03.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-03.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-02.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC-+00.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+01.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+02.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+03.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+03.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+04.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+04.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+05.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+05.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+05.45" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+06.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+06.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+07.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+08.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+08.45" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+09.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+09.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+10.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+10.30" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+11.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+12.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+12.45" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+13.00" itemValue="UTC-+Value" />
+                                        <f:selectItem itemLabel="UTC+14.00" itemValue="UTC-+Value" />
+                                    </p:selectOneMenu>
+
+                                    <div class="calendar">
+                                        <p:calendar id="button" placeholder="Birthdate" showOn="button" />
+                                    </div>
+
+                                    <p:selectOneMenu id="ultima" style="margin-bottom:10px;">
+                                        <f:selectItem itemLabel="Where did you hear Ultima" itemValue="" />
+                                        <f:selectItem itemLabel="Blogs" itemValue="Blogs" />
+                                        <f:selectItem itemLabel="Google Ads" itemValue="google" />
+                                        <f:selectItem itemLabel="Your Forum" itemValue="prime-forum" />
+                                        <f:selectItem itemLabel="Youtube" itemValue="Youtube" />
+                                        <f:selectItem itemLabel="Events" itemValue="event" />
+                                        <f:selectItem itemLabel="Other" itemValue="other" />
+                                    </p:selectOneMenu>
+                                </div>
+                            </div>
+                            <div class="ui-g-12">
+                                <p:commandButton type="button" value="CONTINUE" styleClass="continue-button" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-card-content  tier">
+                        <div class="ui-g ">
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <div class="card basic">
+                                    <div class="card-header">
+                                        <div class="ui-g">
+                                            <div class="ui-g-8">
+                                                <h1>BASIC</h1>
+                                            </div>
+                                            <div class="ui-g-4">
+                                                <h1>$5</h1>
+                                                <span>/m</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="ui-g">
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Responsive</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Push Messages</div>
+                                            </div>
+                                            <div class="ui-g-12 tier-button-wrapper">
+                                                <p:commandButton value="BASIC" styleClass="tier-button basic" oncomplete="Wizard.selectOrderInfo('.basic', '.order-basic')" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <div class="card pro">
+                                    <div class="card-header">
+                                        <div class="ui-g">
+                                            <div class="ui-g-7">
+                                                <h1>PRO</h1>
+                                            </div>
+                                            <div class="ui-g-5">
+                                                <h1>$25</h1>
+                                                <span>/m</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="ui-g">
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Responsive</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Push Messages</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">7/24 Support</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Free Shipping</div>
+                                            </div>
+                                            <div class="ui-g-12 tier-button-wrapper">
+                                                <p:commandButton value="SELECT PRO" styleClass="tier-button pro" oncomplete="Wizard.selectOrderInfo('.pro', '.order-pro')" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <div class="card pro-plus">
+                                    <div class="card-header">
+                                        <div class="ui-g">
+                                            <div class="ui-g-7">
+                                                <h1>PRO+</h1>
+                                            </div>
+                                            <div class="ui-g-5">
+                                                <h1>$50</h1>
+                                                <span>/m</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="ui-g">
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Responsive</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Push Messages</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">7/24 Support</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Free Shipping</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Unlimited BW</div>
+                                            </div>
+                                            <div class="card-row">
+                                                <div class="ui-g-3">
+                                                    <i class="material-icons">check</i>
+                                                </div>
+                                                <div class="ui-g-9">Special Gift Cards</div>
+                                            </div>
+                                            <div class="ui-g-12 tier-button-wrapper">
+                                                <p:commandButton value="SELECT PRO+" styleClass="tier-button pro-plus" oncomplete="Wizard.selectOrderInfo('.pro-plus', '.order-pro-plus')" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-card-content  payment">
+                        <div class="ui-g ">
+                            <div class="ui-lg-8 ui-g-12 payment-info">
+                                <div class="ui-g">
+                                    <p:outputPanel id="customPanel">
+                                        <p:selectOneRadio id="customRadio" layout="custom">
+                                            <f:selectItem itemLabel="" itemValue="Credit" />
+                                            <f:selectItem itemLabel="" itemValue="Paypal" />
+                                        </p:selectOneRadio>
+
+                                        <p:panelGrid styleClass="ui-noborder" columns="4" layout="grid"
+                                            columnClasses="ui-lg-1 ui-md-1 ui-g-1,ui-lg-5 ui-md-5 ui-g-11,ui-lg-1 ui-md-1 ui-g-1,ui-lg-5 ui-md-5 ui-g-11 ">
+                                            <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+                                            <h:panelGroup styleClass="credits">
+                                                <p:graphicImage name="images/extensions/asset-mastercard.svg"
+                                                    library="ultima-layout" />
+                                                <p:graphicImage name="images/extensions/asset-visa.svg"
+                                                    library="ultima-layout" />
+                                                <p:graphicImage name="images/extensions/asset-amex.svg"
+                                                    library="ultima-layout" />
+                                            </h:panelGroup>
+
+
+
+                                            <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+                                            <h:panelGroup styleClass="paypal">
+                                                <p:graphicImage name="images/extensions/asset-paypal.svg"
+                                                    library="ultima-layout" />
+                                            </h:panelGroup>
+                                        </p:panelGrid>
+                                    </p:outputPanel>
+
+
+
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <h:panelGroup styleClass="md-inputfield md-inputfield-box">
+                                            <p:inputText />
+                                            <label>Card Holder Name </label>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-6">
+                                        <h:panelGroup styleClass="md-inputfield md-inputfield-box">
+                                            <p:inputText />
+                                            <label>Card No</label>
+                                        </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-3">
+                                        <h:panelGroup styleClass="md-inputfield md-inputfield-box">
+                                            <p:inputText />
+                                            <label>Date</label>
+                                        </h:panelGroup>
+                                    </div>
+                                    <div class="ui-g-3">
+                                        <h:panelGroup styleClass="md-inputfield md-inputfield-box">
+                                            <p:inputText />
+                                            <label>CCV</label>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                                <div class="ui-g check-info">
+                                    <p:selectManyCheckbox layout="responsive" columns="1">
+                                        <f:selectItem itemLabel=" Save credit card information for future usage"
+                                            itemValue="SaveInfo" />
+                                    </p:selectManyCheckbox>
+                                </div>
+                            </div>
+                            <div class="ui-lg-4 ui-g-12 order-info">
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <h1>ORDER SUMMARY</h1>
+                                    </div>
+                                </div>
+                                <div class="order order-default selected-order">
+                                    <div class="ui-g">
+                                        <div class="ui-g-8">Tier - </div>
+                                        <div class="ui-g-4 price">$0.00</div>
+                                        <div class="ui-g-8">VAT (%18)</div>
+                                        <div class="ui-g-4 price">$0.00</div>
+                                    </div>
+                                    <div class="ui-g total">
+                                        <div class="ui-g-8">Total</div>
+                                        <div class="ui-g-4 price">$0.00</div>
+                                        <div class="ui-g-12">
+                                            Please select one tier.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order order-basic">
+                                    <div class="ui-g">
+                                        <div class="ui-g-8">Tier - Basic</div>
+                                        <div class="ui-g-4 price">$5.00</div>
+                                        <div class="ui-g-8">VAT (%18)</div>
+                                        <div class="ui-g-4 price">$0.90</div>
+                                    </div>
+                                    <div class="ui-g total">
+                                        <div class="ui-g-8">Total</div>
+                                        <div class="ui-g-4 price">$5.90</div>
+                                        <div class="ui-g-12">
+                                            <p:commandButton type="button" value="CONFIRM ORDER" styleClass="buy-button" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order order-pro">
+                                    <div class="ui-g">
+                                        <div class="ui-g-8">Tier - Pro</div>
+                                        <div class="ui-g-4 price">$25.00</div>
+                                        <div class="ui-g-8">VAT (%18)</div>
+                                        <div class="ui-g-4 price">$4.50</div>
+                                    </div>
+                                    <div class="ui-g total">
+                                        <div class="ui-g-8">Total</div>
+                                        <div class="ui-g-4 price">$29.50</div>
+                                        <div class="ui-g-12">
+                                            <p:commandButton type="button" value="CONFIRM ORDER" styleClass="buy-button" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="order order-pro-plus">
+                                    <div class="ui-g">
+                                        <div class="ui-g-8">Tier - Pro+</div>
+                                        <div class="ui-g-4 price">$50.00</div>
+                                        <div class="ui-g-8">VAT (%18)</div>
+                                        <div class="ui-g-4 price">$9.00</div>
+                                    </div>
+                                    <div class="ui-g total">
+                                        <div class="ui-g-8">Total</div>
+                                        <div class="ui-g-4 price">$59.00</div>
+                                        <div class="ui-g-12">
+                                            <p:commandButton type="button" value="CONFIRM ORDER" styleClass="buy-button" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h:outputStylesheet name="css/animate.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/grid.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+    </h:body>
+
+</html>
