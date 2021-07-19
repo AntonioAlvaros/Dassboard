@@ -213,7 +213,7 @@ public class ChartDemoView implements Serializable {
                      conn.close();
                      throw new EmptyListException("No result value from current Date time");
                     }
-                    mapResult.put(rs3.getString("rcode")+" "+ rs3.getString("name"), String.valueOf(rs3.getInt("count") * (100) / rs3.getInt("total"))+"l"+rs3.getInt("count"));
+                    mapResult.put(rs3.getString("rcode")+" "+ rs3.getString("name"), String.valueOf(Float.valueOf(rs3.getInt("count")) * (100) / Float.valueOf(rs3.getInt("total")))  + "l" + rs3.getInt("count"));
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
@@ -229,6 +229,14 @@ public class ChartDemoView implements Serializable {
         }
         return mapResult;
     }
+    
+    
+    public String getformatedValue(String decimalNumber){   
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        return df.format(decimalNumber);
+    }
+    
     
     public PieChartModel getPieModel2() {
         return pieModel2;

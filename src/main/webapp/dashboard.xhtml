@@ -327,7 +327,7 @@
                             <h:outputText class="colorbox-count"  id="txt_count" value="#{pollView.approved}"/>
                         </span>
                         
-                         <p:poll  interval="2" listener="#{pollView.increment}" update="txt_count"/>
+                         <p:poll  interval="1" listener="#{pollView.increment}" update="txt_count"/>
                         
                     </div>
                 </div>
@@ -352,7 +352,7 @@
                     <div class="ui-g-8">
                         <span class="colorbox-name">Rechazadas</span>
                         <h:outputText class="colorbox-count"  id="txt_reject" value="#{pollView.rejected}"/>
-                        <p:poll  interval="2" listener="#{pollView.increment}" update="txt_reject"/>
+                        <p:poll  interval="1" listener="#{pollView.increment}" update="txt_reject"/>
                     </div>
                 </div>
             </div>
@@ -364,7 +364,7 @@
                     <div class="ui-g-8">
                         <span class="colorbox-name">Time Out</span>
                         <h:outputText class="colorbox-count"  id="txt_timeOut" value="#{pollView.timeout}"/>
-                        <p:poll  interval="8" listener="#{pollView.increment}" update="txt_timeOut"/>
+                        <p:poll  interval="1" listener="#{pollView.increment}" update="txt_timeOut"/>
                     </div>
                 </div>
             </div>
@@ -372,7 +372,7 @@
              <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Motivos de Rechazos</h1>
-                    <p:poll interval="5" update="pie" />
+                    <p:poll interval="1" update="pie" />
                     <p:chart id="pie" type="pie" model="#{chartDemoView.pieModel1}" responsive="true" />
                 </div>
              </div>
@@ -380,7 +380,7 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Transacciones por Interfaces</h1>
-                     <p:poll interval="5" update="bar" />
+                     <p:poll interval="1" update="bar" />
                     <p:chart id="bar" type="bar" model="#{chartDemoView.barModel}" responsive="true"/>
                 </div>
              </div>
@@ -388,7 +388,7 @@
                <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Ultimos 3 Meses</h1>
-                     <p:poll interval="5" update="bar2" />
+                     <p:poll interval="1" update="bar2" />
                     <p:chart id="bar2" type="bar" model="#{chartDemoView.barModel1}" responsive="true"/>
                 </div>
              </div>
