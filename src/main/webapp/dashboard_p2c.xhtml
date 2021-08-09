@@ -292,24 +292,7 @@
     <ui:define name="content">
 
    <div>
-            <div class="ui-messages-warn ui-corner-all">
-                <div class="">
-             
-                    <span class="ui-messages-warn-detail">            
-                        <p:graphicImage name="images/extensions/flag-us@2x.png" library="ultima-layout" style="width: 1%" />
-                       <p:spacer width="10" height="10"/>
-                        <h:outputText class="txt_count_amount-counst"  id="txt_count_amount_reversess" value="#{pollViewP2C.information}">    
-
-                        </h:outputText>
-                    </span>
-
-                   
-                    
-                   
-
-                </div>
-           
-            </div>
+          
         </div>
 
         
@@ -363,7 +346,7 @@
                     <div class="ui-g-8">
                         <span class="colorbox-name">Time Out</span>
                         <h:outputText class="colorbox-count"  id="txt_timeOut" value="#{pollViewP2C.timeout}"/>
-                        <p:poll  interval="8" listener="#{pollViewP2C.increment}" update="txt_timeOut"/>
+                        <p:poll  interval="2" listener="#{pollViewP2C.increment}" update="txt_timeOut"/>
                     </div>
                 </div>
             </div>
@@ -371,7 +354,7 @@
              <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Motivos de Rechazos</h1>
-                    <p:poll interval="5" update="pie" />
+                    <p:poll interval="1" update="pie" />
                     <p:chart id="pie" type="pie" model="#{chartDemoViewP2C.pieModel1}" responsive="true" />
                 </div>
              </div>
@@ -379,7 +362,7 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Transacciones por Interfaces</h1>
-                     <p:poll interval="5" update="bar" />
+                     <p:poll interval="1" update="bar" />
                     <p:chart id="bar" type="bar" model="#{chartDemoViewP2C.barModel}" responsive="true"/>
                 </div>
              </div>
@@ -387,7 +370,7 @@
                <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Ultimos 3 Meses</h1>
-                     <p:poll interval="5" update="bar2" />
+                     <p:poll interval="10" update="bar2" />
                     <p:chart id="bar2" type="bar" model="#{chartDemoViewP2C.barModel1}" responsive="true"/>
                 </div>
              </div>

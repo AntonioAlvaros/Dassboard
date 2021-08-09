@@ -36,9 +36,7 @@
     }
     </style>
 </ui:define>
-                
     <ui:define name="title">Data</ui:define>
-
     <ui:define name="content">
         <h:form id="form">
             <div class="ui-g">
@@ -53,15 +51,12 @@
                             <p:column headerText="Id" sortBy="#{car.id}">
                                 <h:outputText value="#{car.id}" />
                             </p:column>
-
                             <p:column headerText="Year" sortBy="#{car.year}">
                                 <h:outputText value="#{car.year}" />
                             </p:column>
-
                             <p:column headerText="Brand" sortBy="#{car.brand}">
                                 <h:outputText value="#{car.brand}" />
                             </p:column>
-
                             <p:column headerText="Color" sortBy="#{car.color}">
                                 <h:outputText value="#{car.color}" />
                             </p:column>
@@ -76,7 +71,6 @@
                                     rows="6" paginator="true" id="cars"
                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                     rowsPerPageTemplate="3,6,9,12,16">
-
                             <f:facet name="header">
                                 Cars For Sale
                             </f:facet>
@@ -158,7 +152,6 @@
                         </p:treeTable>
                     </div>
                 </div>
-                
                 <div class="ui-g-12">
                     <div class="card card-w-title">
                         <h1>DataList - Paginator</h1>

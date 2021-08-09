@@ -292,24 +292,7 @@
     <ui:define name="content">
 
    <div>
-            <div class="ui-messages-warn ui-corner-all">
-                <div class="">
-             
-                    <span class="ui-messages-warn-detail">            
-                        <p:graphicImage name="images/extensions/flag-us@2x.png" library="ultima-layout" style="width: 1%" />
-                       <p:spacer width="10" height="10"/>
-                        <h:outputText class="txt_count_amount-counst"  id="txt_count_amount_reversess" value="#{pollViewCredit.information}">    
-
-                        </h:outputText>
-                    </span>
-
-                   
-                    
-                 
-
-                </div>
-           
-            </div>
+        
         </div>
 
         
@@ -326,7 +309,7 @@
                             <h:outputText class="colorbox-count"  id="txt_count" value="#{pollViewCredit.approved}"/>
                         </span>
                         
-                         <p:poll  interval="2" listener="#{pollViewCredit.increment}" update="txt_count"/>
+                         <p:poll  interval="1" listener="#{pollViewCredit.increment}" update="txt_count"/>
                         
                     </div>
                 </div>
@@ -339,7 +322,7 @@
                     <div class="ui-g-8">
                         <span class="colorbox-name">Reversadas</span>
                         <h:outputText class="colorbox-count"  id="txt_reversed" value="#{pollViewCredit.reversed}"/>
-                        <p:poll  interval="2" listener="#{pollViewCredit.increment}" update="txt_reversed"/>
+                        <p:poll  interval="1" listener="#{pollViewCredit.increment}" update="txt_reversed"/>
                     </div>
                 </div>
             </div>
@@ -363,7 +346,7 @@
                     <div class="ui-g-8">
                         <span class="colorbox-name">Time Out</span>
                         <h:outputText class="colorbox-count"  id="txt_timeOut" value="#{pollViewCredit.timeout}"/>
-                        <p:poll  interval="8" listener="#{pollViewCredit.increment}" update="txt_timeOut"/>
+                        <p:poll  interval="1" listener="#{pollViewCredit.increment}" update="txt_timeOut"/>
                     </div>
                 </div>
             </div>
@@ -379,7 +362,7 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Transacciones por Interfaces</h1>
-                     <p:poll interval="5" update="bar" />
+                     <p:poll interval="1" update="bar" />
                     <p:chart id="bar" type="bar" model="#{chartDemoViewCredit.barModel}" responsive="true"/>
                 </div>
              </div>
@@ -387,7 +370,7 @@
                <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Ultimos 3 Meses</h1>
-                     <p:poll interval="5" update="bar2" />
+                     <p:poll interval="1" update="bar2" />
                     <p:chart id="bar2" type="bar" model="#{chartDemoViewCredit.barModel1}" responsive="true"/>
                 </div>
              </div>
@@ -406,7 +389,7 @@
                         </span>
                          
 
-                         <p:poll  interval="2" listener="#{pollViewCredit.increment}" update="txt_count_amount"/>
+                         <p:poll  interval="1" listener="#{pollViewCredit.increment}" update="txt_count_amount"/>
                         
                         
                     </div>
@@ -450,7 +433,7 @@
                         </span>
                          
 
-                         <p:poll  interval="2" listener="#{pollViewCredit.increment}" update="txt_count_amount_reverse"/>
+                         <p:poll  interval="1" listener="#{pollViewCredit.increment}" update="txt_count_amount_reverse"/>
                         
                     </div>
                     <div class="overview-footer">

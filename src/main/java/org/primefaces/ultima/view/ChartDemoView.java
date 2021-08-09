@@ -48,6 +48,10 @@ import org.primefaces.model.chart.PieChartModel;
 import org.primefaces.ultima.exception.EmptyListException;
 import static org.primefaces.ultima.view.PollView.loadLocalProperties;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.inject.Inject;
+import org.omnifaces.cdi.Push;
+import org.omnifaces.cdi.PushContext;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.LegendPlacement;
@@ -60,16 +64,13 @@ public class ChartDemoView implements Serializable {
    
 
     private String aproveedCountTransaction;
-
-    
     private BarChartModel barModel;
     private BarChartModel barModel1;
-    
+    private boolean connected;
     private PieChartModel pieModel1;
     private PieChartModel pieModel2;
     
-    
-    
+
     
     private static String OS = System.getProperty("os.name").toLowerCase();
     private static String fileName = "config.properties";
@@ -87,6 +88,9 @@ public class ChartDemoView implements Serializable {
     }
 
     public BarChartModel getBarModel1() {
+        
+        System.out.println("getBarModel1");
+        
         barModel1 = new BarChartModel();
         MapperResponseMontTotal before2 = new MapperResponseMontTotal();
         MapperResponseMontTotal before = new MapperResponseMontTotal();        
@@ -140,7 +144,7 @@ public class ChartDemoView implements Serializable {
 
     @PostConstruct
     public void init() {
-
+   System.out.println("init");
         loadProperties();
         try {
             Class.forName(prop.getProperty("dbdriver"));
@@ -168,6 +172,7 @@ public class ChartDemoView implements Serializable {
   
     
     public PieChartModel getPieModel1() {
+        System.out.println("getPieModel");
         Map<String, String> mapResult = new HashMap<String,String>();
         try {
         mapResult = getResponseCodeMaxUsed();
@@ -176,23 +181,20 @@ public class ChartDemoView implements Serializable {
         Map.Entry pair = (Map.Entry)it.next();
         String percent = pair.getValue().toString().split("l")[0];
         String totalTransaction = pair.getValue().toString().split("l")[1];
-        pieModel1.set(pair.getKey().toString() +" ("+ percent + "%)",Integer.valueOf(totalTransaction));
-        System.out.println(pair.getKey().toString() + " = " + pair.getValue());
+        pieModel1.set(pair.getKey().toString() + " (" +   new DecimalFormat("#.##").format(Float.valueOf(percent))+ "%)", Integer.valueOf(totalTransaction));
+ //       System.out.println(pair.getKey().toString() + " = " + pair.getValue());
         it.remove(); // avoids a ConcurrentModificationException
         }
         return pieModel1;
         } catch (EmptyListException e) {
             e.printStackTrace();
         }
-        
-        
-        
-        
         return pieModel1;
     }
 
     
     public  Map<String,String> getResponseCodeMaxUsed() throws EmptyListException{
+               System.out.println("getResponseCodeMaxUse");
         loadLocalProperties();
         Statement stmt3;
         Map<String, String> mapResult = new HashMap<String,String>();
@@ -202,9 +204,9 @@ public class ChartDemoView implements Serializable {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
                 String sql = "(SELECT responseCode rcode,count(*) AS count,\n"
-                        + "(SELECT COUNT(id) FROM dasshboard.operations ) AS total ,\n"
+                        + "(SELECT COUNT(id) FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND  messageTypeIdentifier=\"0210\") AS total ,\n"
                         + "(SELECT rc.traslate FROM response_code rc WHERE rc.code = rcode) \n"
-                        + "AS name FROM dasshboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' \n"
+                        + "AS name FROM dashboard.operations WHERE  messageTypeIdentifier=\"0210\"  AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' \n"
                         + "GROUP BY responseCode ORDER BY COUNT(responseCode) DESC LIMIT 5)";
                 System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
@@ -213,6 +215,13 @@ public class ChartDemoView implements Serializable {
                      conn.close();
                      throw new EmptyListException("No result value from current Date time");
                     }
+                    
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    String formatted = df.format(2.456345); 
+ //                   System.out.println(formatted);
+
+
+       
                     mapResult.put(rs3.getString("rcode")+" "+ rs3.getString("name"), String.valueOf(Float.valueOf(rs3.getInt("count")) * (100) / Float.valueOf(rs3.getInt("total")))  + "l" + rs3.getInt("count"));
                 }
             } catch (SQLException ex) {
@@ -255,15 +264,16 @@ public class ChartDemoView implements Serializable {
 
     public BarChartModel getBarModel() {
         
-        System.out.println(".......................entro get barmodel");
+        barModel = new BarChartModel();
         List<MapperResponseTransactionDestination> responseList = getTransactionRejectAndAprovedByDestination();
+//        System.out.println("lista long:"+responseList.size());
+        
         ChartSeries aproveds = new ChartSeries();
         aproveds.setLabel("Aprobadas");
         for(MapperResponseTransactionDestination c: responseList){
             aproveds.set(c.getDestinationValue(), c.getApprovedCount());
             
         }
-        
         ChartSeries rejects = new ChartSeries();
         rejects.setLabel("Rechazadas");
           for(MapperResponseTransactionDestination c: responseList){
@@ -272,17 +282,7 @@ public class ChartDemoView implements Serializable {
         barModel.addSeries(aproveds);
         barModel.addSeries(rejects);
         
-        
-        
-        
 
-        Axis xAxis = barModel.getAxis(AxisType.X);
-        xAxis.setLabel("Destino de la Transacción");
-
-        Axis yAxis = barModel.getAxis(AxisType.Y);
-        yAxis.setLabel("Cantidad de Transacciones");
-        yAxis.setMin(0);
-        yAxis.setMax(200);
         
         
         return barModel;
@@ -311,8 +311,17 @@ public class ChartDemoView implements Serializable {
                 count = rs3.getInt("count");
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
+                   
             Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }finally {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 
         this.aproveedCountTransaction = String.valueOf(count);
     }
@@ -344,16 +353,13 @@ public class ChartDemoView implements Serializable {
                 
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
-                String sql2 = "SELECT (SELECT COUNT(*) FROM dasshboard.operations WHERE  transmissionDateTime BETWEEN '"+beggingDate +"' AND '"+ endingDate+"'AND responseCode=\"00\") AS \"aprovved\" ,\n" + "(SELECT COUNT(*) FROM dasshboard.operations WHERE transmissionDateTime BETWEEN '"+beggingDate+"' AND '"+endingDate+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\")  AS \"reject\"";
-                System.out.println("sql=" + sql2);
+                String sql2 = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+beggingDate +"' AND '"+ endingDate+"'AND responseCode=\"00\" AND messageTypeIdentifier=\"0210\") AS \"aprovved\" ,\n" + "(SELECT COUNT(*) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+beggingDate+"' AND '"+endingDate+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\")  AS \"reject\"";
+ //               System.out.println("sql=" + sql2);
                 ResultSet rs3 = stmt3.executeQuery(sql2);
                 while (rs3.next()) {
                      responseMontTotalMapper.setApprovedCount(rs3.getInt("aprovved"));
                     responseMontTotalMapper.setRejectCount(rs3.getInt("reject"));
-             
-    
-                    
-                    
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
@@ -376,52 +382,153 @@ public class ChartDemoView implements Serializable {
 
     
     
-    
-    
-    
-    
-    
-    
-    private  List<MapperResponseTransactionDestination> getTransactionRejectAndAprovedByDestination() {
-        List<MapperResponseTransactionDestination> destinationsList = new ArrayList<MapperResponseTransactionDestination>();
-        Statement stmt5;
-        Statement stmt6;
-          try {
+     private  List<MapperResponseTransactionDestination> getRoutNameList() {
+        
+        List<MapperResponseTransactionDestination> list = new ArrayList<MapperResponseTransactionDestination>();
+        loadLocalProperties();
+        Statement stmt3;
+        try {
+            
             Class.forName(prop.getProperty("dbdriver"));
+            
             try {
-            stmt5 = conn.createStatement();
-            String sql = "SELECT routeName FROM dasshboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' GROUP BY routeName";
-            ResultSet rs3 = stmt5.executeQuery(sql);
-            while (rs3.next()) {
-                MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
-                destinationMapper.setDestinationValue(rs3.getString("routeName"));
-                stmt6 = conn.createStatement();
-                
-                String sql2 = "SELECT (SELECT COUNT(*) FROM dasshboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND routeName=\""+  destinationMapper.getDestinationValue() +"\") AS \"aprovved\" ,\n"
-                        + "(SELECT COUNT(*) FROM dasshboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+destinationMapper.getDestinationValue()+"\")  AS \"reject\""; 
-                
-                ResultSet rs4 = stmt6.executeQuery(sql2);
-                while (rs4.next()) {
-                    destinationMapper.setApprovedCount(rs4.getInt("aprovved"));
-                    destinationMapper.setRejectCount(rs4.getInt("reject"));
+                conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
+                stmt3 = conn.createStatement();
+                String sql = "SELECT routeName FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' GROUP BY routeName";
+                System.out.println("sql=" + sql);
+                ResultSet rs3 = stmt3.executeQuery(sql);
+                while (rs3.next()) {
+                          MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
+                          destinationMapper.setDestinationValue(rs3.getString("routeName"));
+                          list.add(destinationMapper);
                 }
-                destinationsList.add(destinationMapper);
-            }
             } catch (SQLException ex) {
                 Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
                     conn.close();
-                } catch (SQLException ex) {    
+                } catch (SQLException ex) {
                     Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }
+        return list;
+                        
+     }
+     
+     
+     private  List<MapperResponseTransactionDestination> getTransactionRejectAndAprovedByDestination() {
+         List<MapperResponseTransactionDestination> rouDestinations = getRoutNameList();
+         
+  //       System.out.println("Cantidad de rutas: "+ rouDestinations.size());
+         
+         List<MapperResponseTransactionDestination> destinationsList = new ArrayList<MapperResponseTransactionDestination>();           
+
+         for(MapperResponseTransactionDestination rd : rouDestinations){
+             
+  //           System.out.println("iterando ruta = "+rd.getDestinationValue());
+              MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
+              destinationMapper.setDestinationValue(rd.getDestinationValue());  
+               Statement stmt3;
+        try {
+            
+            Class.forName(prop.getProperty("dbdriver"));
+            
+            try {
+                conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
+                stmt3 = conn.createStatement();
+                
+                
+                String sql2 = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND  messageTypeIdentifier=\"0210\" AND routeName=\""+  rd.getDestinationValue() +"\") AS \"aprovved\" ,\n"
+                        + "(SELECT COUNT(*) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+rd.getDestinationValue()+"\")  AS \"reject\"";
+                
+                
+                System.out.println("sql2="+ sql2);
+                
+                ResultSet rs4 = stmt3.executeQuery(sql2);
+                while (rs4.next()) {
+                    destinationMapper.setApprovedCount(rs4.getInt("aprovved"));
+                    destinationMapper.setRejectCount(rs4.getInt("reject"));
+                }
+                destinationsList.add(destinationMapper);
+                
+//                
+//                for(MapperResponseTransactionDestination mp: destinationsList){
+//                    System.out.println("******************************************");
+//                    System.out.println("..................+......"+mp.getDestinationValue());
+//                    System.out.println("..................+......"+mp.getApprovedCount());
+//                    System.out.println("..................+......"+mp.getRejectCount());
+//                    System.out.println("******************************************");
+//                }
+//                
+                
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         }
         return destinationsList;   
     }
     
+    
+    
+    
+    
+//    private  List<MapperResponseTransactionDestination> getTransactionRejectAndAprovedByDestination() {
+//        
+//        System.out.println("Entro en getTransactionRejectAndAprovedByDestination");
+//        List<MapperResponseTransactionDestination> destinationsList = new ArrayList<MapperResponseTransactionDestination>();
+//        Statement stmt5;
+//        Statement stmt6;
+//          try {
+//            Class.forName(prop.getProperty("dbdriver"));
+//            try {
+//            stmt5 = conn.createStatement();
+//            String sql = "SELECT routeName FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' GROUP BY routeName";
+//            ResultSet rs3 = stmt5.executeQuery(sql);
+//            while (rs3.next()) {
+//                MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
+//                destinationMapper.setDestinationValue(rs3.getString("routeName"));
+//                stmt6 = conn.createStatement();
+//                
+//                String sql2 = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND routeName=\""+  destinationMapper.getDestinationValue() +"\") AS \"aprovved\" ,\n"
+//                        + "(SELECT COUNT(*) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+destinationMapper.getDestinationValue()+"\")  AS \"reject\""; 
+//                
+//                ResultSet rs4 = stmt6.executeQuery(sql2);
+//                while (rs4.next()) {
+//                    destinationMapper.setApprovedCount(rs4.getInt("aprovved"));
+//                    destinationMapper.setRejectCount(rs4.getInt("reject"));
+//                }
+//                destinationsList.add(destinationMapper);
+//            }
+//            } catch (SQLException ex) {
+//                Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
+//            } finally {
+//                try {
+//                    conn.close();
+//                } catch (SQLException ex) {    
+//                    Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
+//        }   
+//        return destinationsList;   
+//    }
+//    
     
     private void createBarModels() {
         createBarModel();
@@ -463,8 +570,12 @@ public class ChartDemoView implements Serializable {
     }
     
     private void createBarModel() {
+        
+        
         barModel = new BarChartModel();
         List<MapperResponseTransactionDestination> responseList = getTransactionRejectAndAprovedByDestination();
+ //       System.out.println("lista long:"+responseList.size());
+        
         ChartSeries aproveds = new ChartSeries();
         aproveds.setLabel("Aprobadas");
         for(MapperResponseTransactionDestination c: responseList){
@@ -483,7 +594,7 @@ public class ChartDemoView implements Serializable {
     private String getHoursPass(int hourPass) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, -number);
-        System.out.println(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
+  //      System.out.println(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
         return String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
     }
 
@@ -503,8 +614,7 @@ public class ChartDemoView implements Serializable {
                 Map.Entry pair = (Map.Entry) it.next();
                 String percent = pair.getValue().toString().split("l")[0];
                 String totalTransaction = pair.getValue().toString().split("l")[1];
-                pieModel1.set(pair.getKey().toString() + " (" + percent + "%)", Integer.valueOf(totalTransaction));
-                System.out.println(pair.getKey().toString() + " = " + pair.getValue());
+                pieModel1.set(pair.getKey().toString() + " (" +   new DecimalFormat("#.##").format(Float.valueOf(percent))+ "%)", Integer.valueOf(totalTransaction));
                 it.remove(); // avoids a ConcurrentModificationException
             }
             pieModel1.setTitle("Simple Pie");
@@ -531,7 +641,7 @@ public class ChartDemoView implements Serializable {
         if (isWindows()) {
             propertiesSource = "c://" + fileName;
         }
-        System.out.println(propertiesSource);
+     //   System.out.println(propertiesSource);
         try (InputStream input = new FileInputStream(propertiesSource)) {
             // load a properties file
             prop.load(input);
@@ -580,7 +690,7 @@ public class ChartDemoView implements Serializable {
         cal.set(Calendar.DAY_OF_MONTH, 0);
         cal.add(Calendar.MONTH, -1);
         cal.add(Calendar.DAY_OF_MONTH, 1);
-         System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+     //    System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
      
@@ -594,7 +704,7 @@ public class ChartDemoView implements Serializable {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.add(Calendar.MONTH, -1);
-        System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+   //     System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
     
@@ -610,7 +720,7 @@ public class ChartDemoView implements Serializable {
         cal.add(Calendar.MONTH, -1);
         cal.add(Calendar.DAY_OF_MONTH, 1);
            cal.add(Calendar.MONTH, -1);
-           System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+  //         System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
     
@@ -618,7 +728,7 @@ public class ChartDemoView implements Serializable {
      public static Timestamp getCurrentDate(){
          
         Calendar cal = Calendar.getInstance();
-        System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+    //    System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
     

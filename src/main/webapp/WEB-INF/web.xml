@@ -16,6 +16,10 @@
         <param-value>ultima-blue</param-value>
     </context-param>
     <context-param>
+      <param-name>org.omnifaces.SOCKET_ENDPOINT_ENABLED</param-name>
+      <param-value>true</param-value>
+    </context-param>
+    <context-param>
         <param-name>primefaces.FONT_AWESOME</param-name>
         <param-value>true</param-value>
     </context-param>
@@ -46,11 +50,12 @@
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
     </servlet>
     
-    <servlet>
+  <servlet>
     <servlet-name>TCPServlet</servlet-name>
     <servlet-class>org.primefaces.ultima.servlet.TCPServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
+  
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.jsf</url-pattern>
