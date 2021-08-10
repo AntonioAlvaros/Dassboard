@@ -65,14 +65,18 @@ public class PollView implements Serializable {
     private static Properties prop = new Properties();
     private PieChartModel pieModel1;
 
-    /////////////CounterTemp
-    public static Integer dataBaseTempApproved = 0;
 
     /////////////CounterTemp
     public static Integer tempApproved = 0;
     public static Integer tempReversed = 0;
     public static Integer tempReject = 0;
     public static Integer tempTimeOut = 0;
+    
+    ////////////////////
+     static   Integer countApproved = 0;
+     static   Integer countReject = 0;
+     static   Integer countTimeOut = 0;
+     static    Integer countReversed = 0;
 
     Connection conn;
 
@@ -98,9 +102,6 @@ public class PollView implements Serializable {
         connected = true;
     }
 
-    public void incrementer(int i) {
-        push.send(i);
-    }
 
     public Long getCount() {
         return counter.get();
@@ -170,10 +171,7 @@ public class PollView implements Serializable {
 
     @PostConstruct
     public void init() {
-        Integer countApproved = 0;
-        Integer countReject = 0;
-        Integer countTimeOut = 0;
-        Integer countReversed = 0;
+
         loadLocalProperties();
         Statement stmt3;
         try {
@@ -219,11 +217,13 @@ public class PollView implements Serializable {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
 
         System.out.println("::::::::::::::::::::::::::::::::::::::.");
         tempApproved = countApproved;
         counter.set(Long.valueOf(tempApproved));
-        incrementer(dataBaseTempApproved);
+        
 
         tempReject = countReject;
         counterReject.set(Long.valueOf(tempReject));
@@ -262,12 +262,7 @@ public class PollView implements Serializable {
     }
 
     public void increment() {
-  
 
-        Integer countApproved = 0;
-        Integer countReject = 0;
-        Integer countTimeOut = 0;
-        Integer countReversed = 0;
         loadLocalProperties();
         Statement stmt3;
         try {
@@ -514,9 +509,9 @@ public class PollView implements Serializable {
 
             try {
                 //ss = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
-                ss = new ServerSocket(9972);
+                ss = new ServerSocket(9975);
                 System.out.println("socket iniciado*********************************************************");
-                System.out.println("Source inicializado " + "9972" + " [OK]");
+                System.out.println("Source inicializado " + "9974" + " [OK]");
                 while (true) {
                     Socket socket = ss.accept();
                     System.out.println("conectado from [" + socket.getInetAddress().getHostName() + "]");
