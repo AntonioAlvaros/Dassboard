@@ -511,7 +511,7 @@ public class PollView implements Serializable {
                 //ss = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
                 ss = new ServerSocket(9975);
                 System.out.println("socket iniciado*********************************************************");
-                System.out.println("Source inicializado " + "9974" + " [OK]");
+                System.out.println("Source inicializado " + "9972" + " [OK]");
                 while (true) {
                     Socket socket = ss.accept();
                     System.out.println("conectado from [" + socket.getInetAddress().getHostName() + "]");
