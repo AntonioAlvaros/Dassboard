@@ -509,9 +509,8 @@ public class PollView implements Serializable {
 
             try {
                 //ss = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
-                ss = new ServerSocket(9996);
-                System.out.println("socket iniciado*********************************************************");
-                System.out.println("Source inicializado " + "9996" + " [OK]");
+                ss = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
+                System.out.println("Source inicializado " + prop.getProperty("port") + " [OK]");
                 while (true) {
                     Socket socket = ss.accept();
                     System.out.println("conectado from [" + socket.getInetAddress().getHostName() + "]");
@@ -756,4 +755,19 @@ public class PollView implements Serializable {
             return new Timestamp(cal.getTimeInMillis());
         }
     }
+    
+       public static void loadProperties() {
+        String propertiesSource = "/home/" + fileName;
+        if (isWindows()) {
+            propertiesSource = "c://" + fileName;
+        }
+        System.out.println(propertiesSource);
+        try (InputStream input = new FileInputStream(propertiesSource)) {
+            // load a properties file
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
