@@ -73,7 +73,7 @@ public class ChartDemoView implements Serializable {
 
     
     private static String OS = System.getProperty("os.name").toLowerCase();
-    private static String fileName = "config.properties";
+    private static String fileName = "configDASHBOARD.properties";
     private static Properties prop = new Properties();
     Connection conn;
     
@@ -146,6 +146,9 @@ public class ChartDemoView implements Serializable {
     public void init() {
    System.out.println("init");
         loadProperties();
+        prop.getProperty("dbdriver");
+        
+        
         try {
             Class.forName(prop.getProperty("dbdriver"));
             try {
@@ -641,7 +644,7 @@ public class ChartDemoView implements Serializable {
         if (isWindows()) {
             propertiesSource = "c://" + fileName;
         }
-     //   System.out.println(propertiesSource);
+        System.out.println(propertiesSource);
         try (InputStream input = new FileInputStream(propertiesSource)) {
             // load a properties file
             prop.load(input);
