@@ -61,7 +61,7 @@ import static org.primefaces.ultima.view.ChartDemoView.getCurrentDateTime;
 public class PollView implements Serializable {
 
     private static String OS = System.getProperty("os.name").toLowerCase();
-    private static String fileName = "config.properties";
+    private static String fileName = "configDASHBOARD.properties";
     private static Properties prop = new Properties();
     private PieChartModel pieModel1;
 
