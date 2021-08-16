@@ -43,7 +43,7 @@ public class TCPServerRunner extends Thread {
     
     private static final int PORT = 54780;
     private static String OS = System.getProperty("os.name").toLowerCase();
-    private static String fileName = "config.properties";
+    private static String fileName = "configDASHBOARD.properties";
     private static Properties prop = new Properties();
     ServerSocket ss;
           

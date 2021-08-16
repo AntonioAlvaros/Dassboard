@@ -6,6 +6,7 @@
 package org.primefaces.ultima.view;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,9 +33,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -175,9 +174,7 @@ public class PollView implements Serializable {
         loadLocalProperties();
         Statement stmt3;
         try {
-
             Class.forName(prop.getProperty("dbdriver"));
-
             try {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
@@ -188,7 +185,7 @@ public class PollView implements Serializable {
                         + "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' AND responseCode=\"00\" AND messageTypeIdentifier=\"0210\") AS \"sumAprobadas\",\n"
                         + "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"sumRechazadas\",\n"
                         + "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' AND messageTypeIdentifier =\"0410\") AS \"sumReversed\"";
-                System.out.println("sql=" + sql);
+//                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                     countApproved = rs3.getInt("Aprobadas");
@@ -220,7 +217,7 @@ public class PollView implements Serializable {
         
         
 
-        System.out.println("::::::::::::::::::::::::::::::::::::::.");
+//        System.out.println("::::::::::::::::::::::::::::::::::::::.");
         tempApproved = countApproved;
         counter.set(Long.valueOf(tempApproved));
         
@@ -279,7 +276,7 @@ public class PollView implements Serializable {
 "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\" AND messageTypeIdentifier=\"0210\") AS \"sumAprobadas\",\n" +
 "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\"  AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"sumRechazadas\",\n" +
 "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND messageTypeIdentifier =\"0410\") AS \"sumReversed\"";
-                System.out.println("sql=" + sql);
+//                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                     countApproved = rs3.getInt("Aprobadas");
@@ -311,7 +308,7 @@ public class PollView implements Serializable {
             Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        System.out.println("entro.........................");
+ //       System.out.println("entro.........................");
         approved = countApproved;
         rejected = countReject;
         timeout = countTimeOut;
@@ -504,68 +501,28 @@ public class PollView implements Serializable {
         }
 
         private void InitServer() {
-
+  //          System.out.println("Entro en el hilo de inicialización");
             loadProperties();
+            System.out.println("puert::"+prop.getProperty("port") );
+         ServerSocket serverSocket = null;
+        Socket socket = null;
 
+        try {
+            serverSocket = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        while (true) {
             try {
-                //ss = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
-                ss = new ServerSocket(Integer.valueOf(prop.getProperty("port")));
-                System.out.println("Source inicializado " + prop.getProperty("port") + " [OK]");
-                while (true) {
-                    Socket socket = ss.accept();
-                    System.out.println("conectado from [" + socket.getInetAddress().getHostName() + "]");
-                    OutputStream os = socket.getOutputStream();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String response;
-                    int i = 0;
-                    while ((response = in.readLine()) != null) {
-                        System.out.println("It is response plot: " + response);
-                        try {
-                            Operation operation = contructObject(response);
-                            System.out.println("operation=" + operation.getResponseCode39());
-                            //Esto solo contempla para el contador si la transacción es del día
-                            if (isToday(operation.getTransmissionDateTime7())) {
-                                if (operation.getMessageTypeIdentifier().equals("0210") && operation.getResponseCode39().equals("00")) {
-                                    tempApproved++;
-                                    System.out.println("APROBADA::::::::::");
-                                    push.send(tempApproved);
-
-                                }
-                                if (operation.getMessageTypeIdentifier().equals("0210") && operation.getResponseCode39().equals("91")) {
-                                    tempTimeOut++;
-                                    System.out.println("TIMEOUT::::::::::");
-                                    pushTimeOut.send(tempTimeOut);
-                                } else if (operation.getMessageTypeIdentifier().equals("0410")) {
-                                    System.out.println("REVERSADA::::::::::");
-                                    tempReversed++;
-                                    pushReverse.send(tempReversed);
-                                } else if ((operation.getMessageTypeIdentifier().equals("0210")) && (!operation.getResponseCode39().equals("00"))) {
-                                    System.out.println("RECHAZADA::::::::::");
-                                    tempReject++;
-                                    pushReject.send(tempReject);
-                                }
-                            }
-
-                            ThreadSaveTransactionInfo tcpSave = new ThreadSaveTransactionInfo(operation);
-                            tcpSave.setDaemon(true);
-                            tcpSave.start();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    os.flush();
-                }
-            } catch (IOException ex) {
-                System.out.println("IOException*********************************************************");
-
-                ex.printStackTrace();
-                System.out.println(ex);
-            } catch (Exception e) {
-                System.out.println("IOException*********************************************************");
-                e.printStackTrace();
-                System.out.println("\n\tERROR[" + e.getMessage() + "]");
+                socket = serverSocket.accept();
+            } catch (IOException e) {
+                System.out.println("I/O error: " + e);
             }
+            // new thread for a client
+            new EchoThread(socket).start();
+        }
+         
 
         }
 
@@ -610,51 +567,11 @@ public class PollView implements Serializable {
 
         @Override
         public void run() {
+            System.out.println("Creando Hilo inicialización");
             InitServer();
         }
 
-        private Operation contructObject(String response) throws Exception {
-            String[] plot = response.split(";");
-            Operation operation = new Operation();
-            try {
-                operation.setMessageTypeIdentifier(plot[0].trim());
-                operation.setPrimaryAccountNumber2(plot[1].trim());
-                operation.setProcessingCode3(plot[2].trim());
-                operation.setAmounTransaction4(convertAmount(plot[3].trim()));
-                operation.setTransmissionDateTime7(plot[4].trim());
-                operation.setSystemTraceAuditNumber11(plot[5].trim());
-                operation.setTimeLocalTransaction12(plot[6].trim());
-                operation.setLocalTransactiondate13(plot[7].trim());
-                operation.setSettlementDate15(plot[8].trim());
-                operation.setDateCapture17(plot[9].trim());
-                operation.setMerchantCategoryCode18(plot[10].trim());
-                operation.setPosEntryMode22(plot[11].trim());
-                operation.setCodeAcquiringInstitution32(plot[12].trim());
-                operation.setForwardingInstitutionCode33(plot[13].trim());
-                operation.setTrack2Data35(plot[14].trim());
-                operation.setRetrievalReferenceNumber37(plot[15].trim());
-                operation.setAuthorizationCode38(plot[16].trim());
-                operation.setResponseCode39(plot[17].trim());
-                operation.setIdentificationReceivingTerminalCard41(plot[18].trim());
-                operation.setNameAndLocationReceiverCard43(plot[19].trim());
-                operation.setTransactionCurrencyCode49(plot[20].trim());
-                operation.setReserved58(plot[21].trim());
-                operation.setAccountIdentification102(plot[22].trim());
-                operation.setAccountIdentification103(plot[23].trim());
-                operation.setTransactionDescription104(plot[24]);
-                operation.setReserved123(plot[25].trim());
-                operation.setDestinationRoute(plot[26].trim());
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                operation.setResponseCode39("Error leyendo el mensaje");
-                throw new Exception();
-
-            }
-            return operation;
-        }
-
-    }
+       
 
     public class ThreadSaveTransactionInfo extends Thread {
 
@@ -756,7 +673,7 @@ public class PollView implements Serializable {
         }
     }
     
-       public static void loadProperties() {
+       public  void loadProperties() {
         String propertiesSource = "/home/" + fileName;
         if (isWindows()) {
             propertiesSource = "c://" + fileName;
@@ -769,5 +686,126 @@ public class PollView implements Serializable {
             ex.printStackTrace();
         }
     }
+       
+          public class EchoThread extends Thread {
+    protected Socket socket;
+
+    public EchoThread(Socket clientSocket) {
+        this.socket = clientSocket;
+    }
+
+    public void run() {
+        InputStream inp = null;
+        BufferedReader brinp = null;
+        DataOutputStream out = null;
+        try {
+            inp = socket.getInputStream();
+            brinp = new BufferedReader(new InputStreamReader(inp));
+            out = new DataOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            return;
+        }
+        String line;
+        while (true) {
+            try {
+                line = brinp.readLine();
+                if ((line == null)) {
+                    socket.close();
+                    return;
+                } else {
+                    
+                    
+                     try {
+                            Operation operation = contructObject(line);
+                            System.out.println("operation=" + operation.getResponseCode39());
+                            //Esto solo contempla para el contador si la transacción es del día
+                            if (isToday(operation.getTransmissionDateTime7())) {
+                                if (operation.getMessageTypeIdentifier().equals("0210") && operation.getResponseCode39().equals("00")) {
+                                    tempApproved++;
+                                    System.out.println("APROBADA::::::::::");
+                                    push.send(tempApproved);
+
+                                }
+                                if (operation.getMessageTypeIdentifier().equals("0210") && operation.getResponseCode39().equals("91")) {
+                                    tempTimeOut++;
+                                    System.out.println("TIMEOUT::::::::::");
+                                    pushTimeOut.send(tempTimeOut);
+                                } else if (operation.getMessageTypeIdentifier().equals("0410")) {
+                                    System.out.println("REVERSADA::::::::::");
+                                    tempReversed++;
+                                    pushReverse.send(tempReversed);
+                                } else if ((operation.getMessageTypeIdentifier().equals("0210")) && (!operation.getResponseCode39().equals("00"))) {
+                                    System.out.println("RECHAZADA::::::::::");
+                                    tempReject++;
+                                    pushReject.send(tempReject);
+                                }
+                            }
+
+                            ThreadSaveTransactionInfo tcpSave = new ThreadSaveTransactionInfo(operation);
+                            tcpSave.setDaemon(true);
+                            tcpSave.start();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    out.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+    }
+    
+     private Operation contructObject(String response) throws Exception {
+            String[] plot = response.split(";");
+            Operation operation = new Operation();
+            try {
+                operation.setMessageTypeIdentifier(plot[0].trim());
+                operation.setPrimaryAccountNumber2(plot[1].trim());
+                operation.setProcessingCode3(plot[2].trim());
+                operation.setAmounTransaction4(convertAmount(plot[3].trim()));
+                operation.setTransmissionDateTime7(plot[4].trim());
+                operation.setSystemTraceAuditNumber11(plot[5].trim());
+                operation.setTimeLocalTransaction12(plot[6].trim());
+                operation.setLocalTransactiondate13(plot[7].trim());
+                operation.setSettlementDate15(plot[8].trim());
+                operation.setDateCapture17(plot[9].trim());
+                operation.setMerchantCategoryCode18(plot[10].trim());
+                operation.setPosEntryMode22(plot[11].trim());
+                operation.setCodeAcquiringInstitution32(plot[12].trim());
+                operation.setForwardingInstitutionCode33(plot[13].trim());
+                operation.setTrack2Data35(plot[14].trim());
+                operation.setRetrievalReferenceNumber37(plot[15].trim());
+                operation.setAuthorizationCode38(plot[16].trim());
+                operation.setResponseCode39(plot[17].trim());
+                operation.setIdentificationReceivingTerminalCard41(plot[18].trim());
+                operation.setNameAndLocationReceiverCard43(plot[19].trim());
+                operation.setTransactionCurrencyCode49(plot[20].trim());
+                operation.setReserved58(plot[21].trim());
+                operation.setAccountIdentification102(plot[22].trim());
+                operation.setAccountIdentification103(plot[23].trim());
+                operation.setTransactionDescription104(plot[24]);
+                operation.setReserved123(plot[25].trim());
+                operation.setDestinationRoute(plot[26].trim());
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                operation.setResponseCode39("Error leyendo el mensaje");
+                throw new Exception();
+
+            }
+            return operation;
+        }
+
+    }
+    
+}
+
+       
+       
+       
+       
+       
 
 }

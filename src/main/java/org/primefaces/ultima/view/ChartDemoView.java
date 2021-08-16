@@ -89,7 +89,7 @@ public class ChartDemoView implements Serializable {
 
     public BarChartModel getBarModel1() {
         
-        System.out.println("getBarModel1");
+//        System.out.println("getBarModel1");
         
         barModel1 = new BarChartModel();
         MapperResponseMontTotal before2 = new MapperResponseMontTotal();
@@ -144,7 +144,7 @@ public class ChartDemoView implements Serializable {
 
     @PostConstruct
     public void init() {
-   System.out.println("init");
+//   System.out.println("init");
         loadProperties();
         prop.getProperty("dbdriver");
         
@@ -197,7 +197,7 @@ public class ChartDemoView implements Serializable {
 
     
     public  Map<String,String> getResponseCodeMaxUsed() throws EmptyListException{
-               System.out.println("getResponseCodeMaxUse");
+//               System.out.println("getResponseCodeMaxUse");
         loadLocalProperties();
         Statement stmt3;
         Map<String, String> mapResult = new HashMap<String,String>();
@@ -211,7 +211,7 @@ public class ChartDemoView implements Serializable {
                         + "(SELECT rc.traslate FROM response_code rc WHERE rc.code = rcode) \n"
                         + "AS name FROM dashboard.operations WHERE  messageTypeIdentifier=\"0210\"  AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' \n"
                         + "GROUP BY responseCode ORDER BY COUNT(responseCode) DESC LIMIT 5)";
-                System.out.println("sql=" + sql);
+//                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                     if( rs3.getInt("total")== 0){
@@ -398,7 +398,7 @@ public class ChartDemoView implements Serializable {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
                 String sql = "SELECT routeName FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' GROUP BY routeName";
-                System.out.println("sql=" + sql);
+//                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                           MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
@@ -449,7 +449,7 @@ public class ChartDemoView implements Serializable {
                         + "(SELECT COUNT(*) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+rd.getDestinationValue()+"\")  AS \"reject\"";
                 
                 
-                System.out.println("sql2="+ sql2);
+//                System.out.println("sql2="+ sql2);
                 
                 ResultSet rs4 = stmt3.executeQuery(sql2);
                 while (rs4.next()) {
