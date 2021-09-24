@@ -180,7 +180,7 @@ public class PollViewCredit implements Serializable {
             try {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
-                String sql = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='003000' AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\") AS \"Aprobadas\",\n" +
+                String sql = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='003000'  AND messageTypeIdentifier=\"0210\" AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\") AS \"Aprobadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='003000' AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"Rechazadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='003000' AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND messageTypeIdentifier =\"0410\") AS \"Reversadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='003000' AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"91\") AS \"TimeOut\" ,\n" +

@@ -72,6 +72,20 @@ public class PollView implements Serializable {
     public static Integer tempTimeOutP2PTest = 0;
     public static Integer tempReversedP2PTest = 0;
 
+    ///////////////Contador de P2P
+    public static Integer tempApprovedP2CTest = 0;
+    public static Integer tempRejectP2CTest = 0;
+    public static Integer tempTimeOutP2CTest = 0;
+    public static Integer tempReversedP2CTest = 0;
+
+    ///////////////Contador de C2P
+    public static Integer tempApprovedC2PTest = 0;
+    public static Integer tempRejectC2PTest = 0;
+    public static Integer tempTimeOutC2PTest = 0;
+    public static Integer tempReversedC2PTest = 0;
+
+
+
     ///////////////Contador de DEBITO
     public static Integer tempApprovedDEBITTest = 0;
     public static Integer tempRejectDEBITTest = 0;
@@ -83,8 +97,6 @@ public class PollView implements Serializable {
     public static Integer tempRejectCREDITTest = 0;
     public static Integer tempTimeOutCREDITTest = 0;
     public static Integer tempReversedCREDITTest = 0;
-
-
 
 
     /////////////CounterTemp
@@ -157,24 +169,47 @@ public class PollView implements Serializable {
     @Inject
     @Push(channel = "counterCREDIT")
     private PushContext pushCREDIT;
-
-
     @Inject
     @Push(channel = "counterRejectCREDIT")
     private PushContext pushRejectCREDIT;
-
     @Inject
     @Push(channel = "counterTimeOutCREDIT")
     private PushContext pushTimeOutCREDIT;
-
     @Inject
     @Push(channel = "counterReverseCREDIT")
     private PushContext pushReverseCREDIT;
-
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////P2C////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
     
-
-  
-
+    @Inject
+    @Push(channel = "counterP2C")
+    private PushContext pushP2C;
+    @Inject
+    @Push(channel = "counterReverseP2C")
+    private PushContext pushReverseP2C;
+    @Inject
+    @Push(channel = "counterRejectP2C")
+    private PushContext pushRejectP2C;
+    @Inject
+    @Push(channel = "counterTimeOutP2C")
+    private PushContext pushTimeOutP2C;
+  /////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////P2C////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
+    
+    @Inject
+    @Push(channel = "counterC2P")
+    private PushContext pushC2P;
+    @Inject
+    @Push(channel = "counterReverseC2P")
+    private PushContext pushReverseC2P;
+    @Inject
+    @Push(channel = "counterRejectC2P")
+    private PushContext pushRejectC2P;
+    @Inject
+    @Push(channel = "counterTimeOutC2P")
+    private PushContext pushTimeOutC2P;
 
 
 
@@ -266,7 +301,7 @@ public class PollView implements Serializable {
                         + "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' AND responseCode=\"00\" AND messageTypeIdentifier=\"0210\") AS \"sumAprobadas\",\n"
                         + "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"sumRechazadas\",\n"
                         + "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' AND messageTypeIdentifier =\"0410\") AS \"sumReversed\"";
-//                System.out.println("sql=" + sql);
+                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                     countApproved = rs3.getInt("Aprobadas");
@@ -819,7 +854,13 @@ public class PollView implements Serializable {
                                       System.out.println("***********************tempApprovedCREDITTest="+tempApprovedCREDITTest);
                                       pushCREDIT.send(tempApprovedCREDITTest++);
                                     }
-
+                                    if(operation.getProcessingCode3().equals("560050")){
+                                       System.out.println("***********************tempApprovedP2PTest="+tempApprovedP2PTest);
+                                       pushP2C.send(tempApprovedP2CTest++);
+                                    }if(operation.getProcessingCode3().equals("560009")){
+                                       System.out.println("***********************560009="+tempApprovedC2PTest);
+                                       pushC2P.send(tempApprovedC2PTest++);
+                                    }
 
   
     
@@ -840,6 +881,14 @@ public class PollView implements Serializable {
                                     if(operation.getProcessingCode3().equals("003000")){
                                         pushTimeOutCREDIT.send(tempTimeOutCREDITTest++);                               
                                     }
+                                    if(operation.getProcessingCode3().equals("560050")){
+                                       pushTimeOutP2C.send(tempTimeOutP2CTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("560009")){
+                                       System.out.println("***********************tempTimeOutC2PTest="+tempTimeOutC2PTest);
+                                       pushTimeOutC2P.send(tempTimeOutC2PTest++);
+                                    }
+
 
                                 } else if (operation.getMessageTypeIdentifier().equals("0410")) {
                                     System.out.println("REVERSADA::::::::::");
@@ -856,6 +905,14 @@ public class PollView implements Serializable {
                                         System.out.println("***********************pushReverseCREDIT="+pushReverseCREDIT);
                                         pushReverseCREDIT.send(tempReversedCREDITTest++);  
                                     }
+                                    if(operation.getProcessingCode3().equals("560050")){
+                                       System.out.println("***********************tempReversedP2PTest="+tempReversedP2PTest);
+                                       pushReverseP2C.send(tempReversedP2CTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("560009")){
+                                       System.out.println("***********************tempReversedC2PTest="+tempReversedC2PTest);
+                                       pushReverseC2P.send(tempReversedC2PTest++);
+                                    }
                                 } else if ((operation.getMessageTypeIdentifier().equals("0210")) && (!operation.getResponseCode39().equals("00"))) {
                                     System.out.println("RECHAZADA::::::::::");
                                     tempReject++;
@@ -869,6 +926,15 @@ public class PollView implements Serializable {
                                     if(operation.getProcessingCode3().equals("003000")){
                                     pushRejectCREDIT.send(tempRejectCREDITTest++);
                                     }
+                                    if(operation.getProcessingCode3().equals("560050")){
+                                    pushRejectP2C.send(tempRejectP2CTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("560009")){
+                                    pushRejectC2P.send(tempRejectC2PTest++);
+                                    }
+
+
+
                                 }
                             }
 

@@ -179,7 +179,7 @@ public class PollViewDebit implements Serializable {
             try {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
-               String sql = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\") AS \"Aprobadas\",\n" +
+               String sql = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND messageTypeIdentifier=\"0210\"  AND responseCode=\"00\") AS \"Aprobadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"Rechazadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND messageTypeIdentifier =\"0410\") AS \"Reversadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"91\") AS \"TimeOut\" ,\n" +
@@ -216,6 +216,8 @@ public class PollViewDebit implements Serializable {
             Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+
+            System.out.println("tempApproved...............................................=" + tempApproved);
         tempApproved = countApprovedp2p;
         counter.set(Long.valueOf(tempApproved));
         PollView.tempApprovedDEBITTest = tempApproved;
@@ -276,10 +278,10 @@ public class PollViewDebit implements Serializable {
             try {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword")); 
                 stmt3 = conn.createStatement();
-             String sql = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\") AS \"Aprobadas\",\n" +
+             String sql = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND messageTypeIdentifier=\"0210\" AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\") AS \"Aprobadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"Rechazadas\",\n" +
 "(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND messageTypeIdentifier =\"0410\") AS \"Reversadas\",\n" +
-"(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"91\") AS \"TimeOut\" ,\n" +
+"(SELECT COUNT(*) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND messageTypeIdentifier=\"0210\" AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"91\") AS \"TimeOut\" ,\n" +
 "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode=\"00\") AS \"sumAprobadas\",\n" +
 "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\") AS \"sumRechazadas\",\n" +
 "(SELECT sum(amounTransaction) FROM dashboard.operations WHERE (processingCode='002000' OR processingCode='001000' OR  processingCode='000000') AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND messageTypeIdentifier =\"0410\") AS \"sumReversed\"";

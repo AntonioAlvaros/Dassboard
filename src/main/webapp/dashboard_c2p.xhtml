@@ -317,12 +317,12 @@
                     <div class="ui-g-8">
                         <span class="colorbox-name">Aprobadas</span>
            
-                   <h1><h:panelGroup class="colorbox-count" id="count">#{pollView.count}</h:panelGroup></h1>
+                   <h1><h:panelGroup class="colorbox-count" id="countc2p">#{pollViewC2P.count}</h:panelGroup></h1>
 
                    <script>
                        function updateCounter(newvalue) {
                            //$("#count").text(newvalue);
-                           document.getElementById("count").innerHTML = newvalue;
+                           document.getElementById("countc2p").innerHTML = newvalue;
                        }
 
                        function onclosePush(code) {
@@ -334,7 +334,7 @@
                            }
                        }
                    </script>
-                   <o:socket channel="counter" onmessage="updateCounter" onclose="onclosePush" connected="true" />
+                   <o:socket channel="counterC2P" onmessage="updateCounter" onclose="onclosePush" connected="true" />
                            
      
                     </div>
@@ -347,12 +347,12 @@
                     </div>
                     <div class="ui-g-8">
                         <span class="colorbox-name">Reversadas</span>
-                           <h1><h:panelGroup class="colorbox-count" id="countReverse">#{pollView.countReverse}</h:panelGroup></h1>
+                           <h1><h:panelGroup class="colorbox-count" id="countReversec2p">#{pollViewC2P.countReverse}</h:panelGroup></h1>
 
                    <script>
                        function updateCounterReverse(newvalue) {
                            //$("#count").text(newvalue);
-                           document.getElementById("countReverse").innerHTML = newvalue;
+                           document.getElementById("countReversec2p").innerHTML = newvalue;
                        }
 
                        function onclosePush(code) {
@@ -364,7 +364,7 @@
                            }
                        }
                    </script>
-                   <o:socket channel="counterReverse" onmessage="updateCounterReverse" onclose="onclosePush" connected="true" />
+                   <o:socket channel="counterReverseC2P" onmessage="updateCounterReverse" onclose="onclosePush" connected="true" />
                            
                     </div>
                 </div>
@@ -376,12 +376,12 @@
                     </div>
                     <div class="ui-g-8">
                         <span class="colorbox-name">Rechazadas</span>
-                                 <h1><h:panelGroup class="colorbox-count" id="countReject">#{pollView.countReject}</h:panelGroup></h1>
+                                 <h1><h:panelGroup class="colorbox-count" id="countRejectc2p">#{pollViewC2P.countReject}</h:panelGroup></h1>
 
                    <script>
                        function updateCounterReject(newvalue) {
                            //$("#count").text(newvalue);
-                           document.getElementById("countReject").innerHTML = newvalue;
+                           document.getElementById("countRejectc2p").innerHTML = newvalue;
                        }
 
                        function onclosePush(code) {
@@ -393,7 +393,7 @@
                            }
                        }
                    </script>
-                   <o:socket channel="counterReject" onmessage="updateCounterReject" onclose="onclosePush" connected="true" />
+                   <o:socket channel="counterRejectC2P" onmessage="updateCounterReject" onclose="onclosePush" connected="true" />
                            
                         
                         
@@ -409,12 +409,12 @@
                         <span class="colorbox-name">Time Out</span>
                         
                         
-                                   <h1><h:panelGroup class="colorbox-count" id="countTimeOut">#{pollView.countTimeOut}</h:panelGroup></h1>
+                                   <h1><h:panelGroup class="colorbox-count" id="countTimeOutc2p">#{pollViewC2P.countTimeOut}</h:panelGroup></h1>
 
                    <script>
                        function updateCounterTimeOut(newvalue) {
                            //$("#count").text(newvalue);
-                           document.getElementById("countTimeOut").innerHTML = newvalue;
+                           document.getElementById("countTimeOutc2p").innerHTML = newvalue;
                        }
 
                        function onclosePush(code) {
@@ -426,7 +426,7 @@
                            }
                        }
                    </script>
-                   <o:socket channel="counterTimeOut" onmessage="updateCounterTimeOut" onclose="onclosePush" connected="true" />
+                   <o:socket channel="counterTimeOutC2P" onmessage="updateCounterTimeOut" onclose="onclosePush" connected="true" />
                            
                         
                         
@@ -439,7 +439,7 @@
                 <div class="card">
                     <h1 class="centerText">Motivos de Rechazos</h1>
                     <p:poll interval="5" update="pie" />
-                    <p:chart id="pie" type="pie" model="#{pollViewP2P.pieModel1}" responsive="true" />
+                    <p:chart id="pie" type="pie" model="#{chartDemoViewC2P.pieModel1}" responsive="true" />
                 </div>
              </div>
             
@@ -447,7 +447,7 @@
                 <div class="card">
                     <h1 class="centerText">Transacciones por Interfaces</h1>
                      <p:poll interval="5" update="bar" />
-                    <p:chart id="bar" type="bar" model="#{pollViewP2P.barModel}" responsive="true"/>
+                    <p:chart id="bar" type="bar" model="#{chartDemoViewC2P.barModel}" responsive="true"/>
                 </div>
              </div>
             
@@ -455,7 +455,7 @@
                 <div class="card">
                     <h1 class="centerText">Ultimos 3 Meses</h1>
                      <p:poll interval="10" update="bar2" />
-                    <p:chart id="bar2" type="bar" model="#{chartDemoViewP2P.barModel1}" responsive="true"/>
+                    <p:chart id="bar2" type="bar" model="#{chartDemoViewC2P.barModel1}" responsive="true"/>
                 </div>
              </div>
  
@@ -465,7 +465,7 @@
                         <span class="overview-title">Transacciones Aprobadas</span>
                         <span class="overview-badge">Monto</span>
                        <span class="overview-detail">                        
-                            <h:outputText class="txt_count_amount-count"  id="txt_count_amount" value="#{pollView.sumApproved}">                       
+                            <h:outputText class="txt_count_amount-count"  id="txt_count_amount" value="#{pollViewC2P.sumApproved}">                       
                                 
                                          <f:convertNumber pattern="#000,000.00" />
                             </h:outputText>
@@ -473,7 +473,7 @@
                         </span>
                          
 
-                         <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_count_amount"/>
+                         <p:poll  interval="2" listener="#{pollViewC2P.increment}" update="txt_count_amount"/>
                         
                         
                     </div>
@@ -488,13 +488,13 @@
                         <span class="overview-title">Transacciones Rechazadas</span>
                         <span class="overview-badge">Monto</span>
                                   <span class="overview-detail">                        
-                                      <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reject" value="#{pollView.sumReject}">                       
+                                      <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reject" value="#{pollViewC2P.sumReject}">                       
                                            <f:convertNumber pattern="#000,000.00" />
                             </h:outputText>
                         </span>
                          
 
-                         <p:poll  interval="2" listener="#{pollViewP2P.increment}" update="txt_count_amount_reject"/>
+                         <p:poll  interval="2" listener="#{pollViewC2P.increment}" update="txt_count_amount_reject"/>
                          
                          
                          
@@ -511,13 +511,13 @@
                         <span class="overview-title">Transaciones Reversadas</span>
                         <span class="overview-badge">Monto</span>
                                         <span class="overview-detail">                        
-                                            <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reverse" value="#{pollView.sumReversed}">    
+                                            <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reverse" value="#{pollViewC2P.sumReversed}">    
                                                     <f:convertNumber pattern="#000,000.00" />
                                                 </h:outputText>
                         </span>
                          
 
-                        <p:poll  interval="3" listener="#{pollViewP2P.increment}" update="txt_count_amount_reverse"/>
+                         <p:poll  interval="3" listener="#{pollViewC2P.increment}" update="txt_count_amount_reverse"/>
                         
                     </div>
                     <div class="overview-footer">
