@@ -2,6 +2,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:of="http://omnifaces.org/functions"
+                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
@@ -290,9 +292,18 @@
 
     
     <ui:define name="content">
+        
+<p:tooltip />
 
    <div>
-            
+        <p:messages id="messages" showDetail="true" closable="true"> 
+            <p:autoUpdate/>
+        </p:messages>
+       
+       <p:growl id="growl" showDetail="true" sticky="true" /> 
+             
+       
+       
         </div>
 
         
@@ -305,12 +316,27 @@
                     </div>
                     <div class="ui-g-8">
                         <span class="colorbox-name">Aprobadas</span>
-                        <span class="colorbox-count">
-                            <h:outputText class="colorbox-count"  id="txt_count" value="#{pollViewDebit.approved}"/>
-                        </span>
-                        
-                         <p:poll  interval="1" listener="#{pollViewDebit.increment}" update="txt_count"/>
-                        
+           
+                   <h1><h:panelGroup class="colorbox-count" id="countdebit">#{pollViewDebit.count}</h:panelGroup></h1>
+
+                   <script>
+                       function updateCounter(newvalue) {
+                           //$("#count").text(newvalue);
+                           document.getElementById("countdebit").innerHTML = newvalue;
+                       }
+
+                       function onclosePush(code) {
+                           if (code == -1) {
+                               alert("Oops! Your browser doesn't seem to support web sockets. The push functionality won't work.")
+                           }
+                           else if (code != 1000) {
+                               alert("Oops! Push has stopped working with error code " + code + "! Reload the page.")
+                           }
+                       }
+                   </script>
+                   <o:socket channel="counterDEBIT" onmessage="updateCounter" onclose="onclosePush" connected="true" />
+                           
+     
                     </div>
                 </div>
             </div>
@@ -321,8 +347,25 @@
                     </div>
                     <div class="ui-g-8">
                         <span class="colorbox-name">Reversadas</span>
-                        <h:outputText class="colorbox-count"  id="txt_reversed" value="#{pollViewDebit.reversed}"/>
-                        <p:poll  interval="1" listener="#{pollViewDebit.increment}" update="txt_reversed"/>
+                           <h1><h:panelGroup class="colorbox-count" id="countReversedebit">#{pollViewDebit.countReverse}</h:panelGroup></h1>
+
+                   <script>
+                       function updateCounterReverse(newvalue) {
+                           //$("#count").text(newvalue);
+                           document.getElementById("countReversedebit").innerHTML = newvalue;
+                       }
+
+                       function onclosePush(code) {
+                           if (code == -1) {
+                               alert("Oops! Your browser doesn't seem to support web sockets. The push functionality won't work.")
+                           }
+                           else if (code != 1000) {
+                               alert("Oops! Push has stopped working with error code " + code + "! Reload the page.")
+                           }
+                       }
+                   </script>
+                   <o:socket channel="counterReverseDEBIT" onmessage="updateCounterReverse" onclose="onclosePush" connected="true" />
+                           
                     </div>
                 </div>
             </div>
@@ -333,8 +376,27 @@
                     </div>
                     <div class="ui-g-8">
                         <span class="colorbox-name">Rechazadas</span>
-                        <h:outputText class="colorbox-count"  id="txt_reject" value="#{pollViewDebit.rejected}"/>
-                        <p:poll  interval="2" listener="#{pollViewDebit.increment}" update="txt_reject"/>
+                                 <h1><h:panelGroup class="colorbox-count" id="countRejectdebit">#{pollViewDebit.countReject}</h:panelGroup></h1>
+
+                   <script>
+                       function updateCounterReject(newvalue) {
+                           //$("#count").text(newvalue);
+                           document.getElementById("countRejectdebit").innerHTML = newvalue;
+                       }
+
+                       function onclosePush(code) {
+                           if (code == -1) {
+                               alert("Oops! Your browser doesn't seem to support web sockets. The push functionality won't work.")
+                           }
+                           else if (code != 1000) {
+                               alert("Oops! Push has stopped working with error code " + code + "! Reload the page.")
+                           }
+                       }
+                   </script>
+                   <o:socket channel="counterRejectDEBIT" onmessage="updateCounterReject" onclose="onclosePush" connected="true" />
+                           
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -345,8 +407,30 @@
                     </div>
                     <div class="ui-g-8">
                         <span class="colorbox-name">Time Out</span>
-                        <h:outputText class="colorbox-count"  id="txt_timeOut" value="#{pollViewDebit.timeout}"/>
-                        <p:poll  interval="1" listener="#{pollViewDebit.increment}" update="txt_timeOut"/>
+                        
+                        
+                                   <h1><h:panelGroup class="colorbox-count" id="countTimeOutdebit">#{pollViewDebit.countTimeOut}</h:panelGroup></h1>
+
+                   <script>
+                       function updateCounterTimeOut(newvalue) {
+                           //$("#count").text(newvalue);
+                           document.getElementById("countTimeOutdebit").innerHTML = newvalue;
+                       }
+
+                       function onclosePush(code) {
+                           if (code == -1) {
+                               alert("Oops! Your browser doesn't seem to support web sockets. The push functionality won't work.")
+                           }
+                           else if (code != 1000) {
+                               alert("Oops! Push has stopped working with error code " + code + "! Reload the page.")
+                           }
+                       }
+                   </script>
+                   <o:socket channel="counterTimeOutDEBIT" onmessage="updateCounterTimeOut" onclose="onclosePush" connected="true" />
+                           
+                        
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -362,7 +446,7 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Transacciones por Interfaces</h1>
-                     <p:poll interval="1" update="bar" />
+                     <p:poll interval="5" update="bar" />
                     <p:chart id="bar" type="bar" model="#{chartDemoViewDebit.barModel}" responsive="true"/>
                 </div>
              </div>
@@ -370,7 +454,7 @@
                <div class="ui-g-12 ui-md-4">
                 <div class="card">
                     <h1 class="centerText">Ultimos 3 Meses</h1>
-                     <p:poll interval="1" update="bar2" />
+                     <p:poll interval="10" update="bar2" />
                     <p:chart id="bar2" type="bar" model="#{chartDemoViewDebit.barModel1}" responsive="true"/>
                 </div>
              </div>
@@ -433,7 +517,7 @@
                         </span>
                          
 
-                         <p:poll  interval="2" listener="#{pollViewDebit.increment}" update="txt_count_amount_reverse"/>
+                         <p:poll  interval="3" listener="#{pollViewDebit.increment}" update="txt_count_amount_reverse"/>
                         
                     </div>
                     <div class="overview-footer">
@@ -442,11 +526,5 @@
                 </div>
             </div>
         </div>
-        
-        
-     
-
-     
-
     </ui:define>
 </ui:composition>

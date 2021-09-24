@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 package com.primefaces.ultima.view.p2p;
+import com.primefaces.ultima.view.credit.ChartDemoViewCredit;
+import static com.primefaces.ultima.view.credit.ChartDemoViewCredit.getBeginningDateTime;
+import static com.primefaces.ultima.view.credit.ChartDemoViewCredit.getCurrentDateTime;
 import org.primefaces.ultima.view.*;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -57,20 +60,19 @@ import static org.primefaces.ultima.view.PollView.loadLocalProperties;
 
 @Named( "chartDemoViewP2P")
 public class ChartDemoViewP2P implements Serializable {
-     private String aproveedCountTransaction;
+   
 
-    
+    private String aproveedCountTransaction;
     private BarChartModel barModel;
     private BarChartModel barModel1;
-    
+    private boolean connected;
     private PieChartModel pieModel1;
     private PieChartModel pieModel2;
     
-    
-    
+
     
     private static String OS = System.getProperty("os.name").toLowerCase();
-    private static String fileName = "config.properties";
+    private static String fileName = "configDASHBOARD.properties";
     private static Properties prop = new Properties();
     Connection conn;
     
@@ -85,6 +87,9 @@ public class ChartDemoViewP2P implements Serializable {
     }
 
     public BarChartModel getBarModel1() {
+        
+//        System.out.println("getBarModel1");
+        
         barModel1 = new BarChartModel();
         MapperResponseMontTotal before2 = new MapperResponseMontTotal();
         MapperResponseMontTotal before = new MapperResponseMontTotal();        
@@ -138,8 +143,11 @@ public class ChartDemoViewP2P implements Serializable {
 
     @PostConstruct
     public void init() {
-
+//   System.out.println("init");
         loadProperties();
+        prop.getProperty("dbdriver");
+        
+        
         try {
             Class.forName(prop.getProperty("dbdriver"));
             try {
@@ -166,6 +174,7 @@ public class ChartDemoViewP2P implements Serializable {
   
     
     public PieChartModel getPieModel1() {
+        System.out.println("getPieModel");
         Map<String, String> mapResult = new HashMap<String,String>();
         try {
         mapResult = getResponseCodeMaxUsed();
@@ -175,7 +184,7 @@ public class ChartDemoViewP2P implements Serializable {
         String percent = pair.getValue().toString().split("l")[0];
         String totalTransaction = pair.getValue().toString().split("l")[1];
         pieModel1.set(pair.getKey().toString() + " (" +   new DecimalFormat("#.##").format(Float.valueOf(percent))+ "%)", Integer.valueOf(totalTransaction));
-        System.out.println(pair.getKey().toString() + " = " + pair.getValue());
+ //       System.out.println(pair.getKey().toString() + " = " + pair.getValue());
         it.remove(); // avoids a ConcurrentModificationException
         }
         return pieModel1;
@@ -187,7 +196,8 @@ public class ChartDemoViewP2P implements Serializable {
 
     
     public  Map<String,String> getResponseCodeMaxUsed() throws EmptyListException{
-      loadLocalProperties();
+//               System.out.println("getResponseCodeMaxUse");
+        loadLocalProperties();
         Statement stmt3;
         Map<String, String> mapResult = new HashMap<String,String>();
         try {
@@ -195,22 +205,29 @@ public class ChartDemoViewP2P implements Serializable {
             try {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
-                String sql = "(SELECT responseCode rcode,count(*) AS count,\n"
-                        + "(SELECT COUNT(id) FROM dasshboard.operations WHERE  processingCode='560000') AS total ,\n"
+                       String sql = "(SELECT responseCode rcode,count(*) AS count,\n"
+                        + "(SELECT COUNT(id) FROM dashboard.operations WHERE  processingCode='560000') AS total ,\n"
                         + "(SELECT rc.traslate FROM response_code rc WHERE rc.code = rcode) \n"
-                        + "AS name FROM dasshboard.operations WHERE processingCode='560000'AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' \n"
+                        + "AS name FROM dashboard.operations WHERE processingCode='560000'AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' \n"
                         + "GROUP BY responseCode ORDER BY COUNT(responseCode) DESC LIMIT 5)";
-                System.out.println("sql=" + sql);
+//                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                     if( rs3.getInt("total")== 0){
                      conn.close();
                      throw new EmptyListException("No result value from current Date time");
                     }
-                    mapResult.put(rs3.getString("rcode")+" "+ rs3.getString("name"), String.valueOf(rs3.getInt("count") * (100) / rs3.getInt("total"))+"l"+rs3.getInt("count"));
+                    
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    String formatted = df.format(2.456345); 
+ //                   System.out.println(formatted);
+
+
+       
+                    mapResult.put(rs3.getString("rcode")+" "+ rs3.getString("name"), String.valueOf(Float.valueOf(rs3.getInt("count")) * (100) / Float.valueOf(rs3.getInt("total")))  + "l" + rs3.getInt("count"));
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(ChartDemoViewP2P.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
                     conn.close();
@@ -222,8 +239,6 @@ public class ChartDemoViewP2P implements Serializable {
             Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
         }
         return mapResult;
-
-        
     }
     
     
@@ -253,7 +268,7 @@ public class ChartDemoViewP2P implements Serializable {
         
         barModel = new BarChartModel();
         List<MapperResponseTransactionDestination> responseList = getTransactionRejectAndAprovedByDestination();
-        System.out.println("lista long:"+responseList.size());
+//        System.out.println("lista long:"+responseList.size());
         
         ChartSeries aproveds = new ChartSeries();
         aproveds.setLabel("Aprobadas");
@@ -288,27 +303,33 @@ public class ChartDemoViewP2P implements Serializable {
         this.aproveedCountTransaction = aproveedCountTransaction;
     }
 
-   
     private void setValueCountAprovedTransaction() {
         Integer count = 2;
         Statement stmt3;
         try {
             stmt3 = conn.createStatement();
-            ResultSet rs3 = stmt3.executeQuery(" SELECT COUNT(*) as 'count' FROM operations WHERE processingCode='560000' AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'");
+                 ResultSet rs3 = stmt3.executeQuery(" SELECT COUNT(*) as 'count' FROM operations WHERE processingCode='560000' AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'");
             while (rs3.next()) {
                 count = rs3.getInt("count");
             }
         } catch (Exception ex) {
-            Logger.getLogger(ChartDemoViewP2P.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            ex.printStackTrace();
+                   
+            Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+                try {
+                    conn.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    Logger.getLogger(PollView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
 
         this.aproveedCountTransaction = String.valueOf(count);
     }
     
     
     
-    
-    
 
     
     
@@ -316,7 +337,6 @@ public class ChartDemoViewP2P implements Serializable {
     
     
     
-  
     public MapperResponseMontTotal getTransactionRejectAndAprovedByMonth(Timestamp beggingDate,Timestamp endingDate) {
         MapperResponseMontTotal responseMontTotalMapper  = new MapperResponseMontTotal();
         loadLocalProperties();
@@ -335,8 +355,8 @@ public class ChartDemoViewP2P implements Serializable {
                 
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
-                String sql2 = "SELECT (SELECT COUNT(*) FROM dasshboard.operations WHERE processingCode='560000'AND transmissionDateTime BETWEEN '"+beggingDate +"' AND '"+ endingDate+"'AND responseCode=\"00\") AS \"aprovved\" ,\n" + "(SELECT COUNT(*) FROM dasshboard.operations WHERE transmissionDateTime BETWEEN '"+beggingDate+"' AND '"+endingDate+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\")  AS \"reject\"";
-                System.out.println("sql=" + sql2);
+                 String sql2 = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='560000'AND transmissionDateTime BETWEEN '"+beggingDate +"' AND '"+ endingDate+"'AND responseCode=\"00\") AS \"aprovved\" ,\n" + "(SELECT COUNT(*) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+beggingDate+"' AND '"+endingDate+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\")  AS \"reject\"";
+ //               System.out.println("sql=" + sql2);
                 ResultSet rs3 = stmt3.executeQuery(sql2);
                 while (rs3.next()) {
                      responseMontTotalMapper.setApprovedCount(rs3.getInt("aprovved"));
@@ -344,7 +364,7 @@ public class ChartDemoViewP2P implements Serializable {
 
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(ChartDemoViewP2P.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {
                     conn.close();
@@ -361,6 +381,7 @@ public class ChartDemoViewP2P implements Serializable {
                 
                 
     }
+
     
     
      private  List<MapperResponseTransactionDestination> getRoutNameList() {
@@ -375,8 +396,8 @@ public class ChartDemoViewP2P implements Serializable {
             try {
                 conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
                 stmt3 = conn.createStatement();
-                String sql = "SELECT routeName FROM dasshboard.operations WHERE processingCode='560000' AND  transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' GROUP BY routeName";
-                System.out.println("sql=" + sql);
+                     String sql = "SELECT routeName FROM dashboard.operations WHERE processingCode='560000' AND  transmissionDateTime BETWEEN '" + getBeginningDateTime() + "' AND '" + getCurrentDateTime() + "' GROUP BY routeName";
+//                System.out.println("sql=" + sql);
                 ResultSet rs3 = stmt3.executeQuery(sql);
                 while (rs3.next()) {
                           MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
@@ -404,13 +425,13 @@ public class ChartDemoViewP2P implements Serializable {
      private  List<MapperResponseTransactionDestination> getTransactionRejectAndAprovedByDestination() {
          List<MapperResponseTransactionDestination> rouDestinations = getRoutNameList();
          
-         System.out.println("Cantidad de rutas: "+ rouDestinations.size());
+  //       System.out.println("Cantidad de rutas: "+ rouDestinations.size());
          
          List<MapperResponseTransactionDestination> destinationsList = new ArrayList<MapperResponseTransactionDestination>();           
 
          for(MapperResponseTransactionDestination rd : rouDestinations){
              
-             System.out.println("iterando ruta = "+rd.getDestinationValue());
+  //           System.out.println("iterando ruta = "+rd.getDestinationValue());
               MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
               destinationMapper.setDestinationValue(rd.getDestinationValue());  
                Statement stmt3;
@@ -423,11 +444,11 @@ public class ChartDemoViewP2P implements Serializable {
                 stmt3 = conn.createStatement();
                 
                 
-                String sql2 = "SELECT (SELECT COUNT(*) FROM dasshboard.operations WHERE processingCode='560000' AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND routeName=\""+  rd.getDestinationValue() +"\") AS \"aprovved\" ,\n"
-                        + "(SELECT COUNT(*) FROM dasshboard.operations WHERE  processingCode='560000' AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+rd.getDestinationValue()+"\")  AS \"reject\"";
+                String sql2 = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='560000' AND  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND  messageTypeIdentifier=\"0210\" AND routeName=\""+  rd.getDestinationValue() +"\") AS \"aprovved\" ,\n"
+                        + "(SELECT COUNT(*) FROM dashboard.operations WHERE processingCode='560000'AND transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+rd.getDestinationValue()+"\")  AS \"reject\"";
                 
                 
-                System.out.println("sql2="+ sql2);
+//                System.out.println("sql2="+ sql2);
                 
                 ResultSet rs4 = stmt3.executeQuery(sql2);
                 while (rs4.next()) {
@@ -436,15 +457,15 @@ public class ChartDemoViewP2P implements Serializable {
                 }
                 destinationsList.add(destinationMapper);
                 
-                
-                for(MapperResponseTransactionDestination mp: destinationsList){
-                    System.out.println("******************************************");
-                    System.out.println("..................+......"+mp.getDestinationValue());
-                    System.out.println("..................+......"+mp.getApprovedCount());
-                    System.out.println("..................+......"+mp.getRejectCount());
-                    System.out.println("******************************************");
-                }
-                
+//                
+//                for(MapperResponseTransactionDestination mp: destinationsList){
+//                    System.out.println("******************************************");
+//                    System.out.println("..................+......"+mp.getDestinationValue());
+//                    System.out.println("..................+......"+mp.getApprovedCount());
+//                    System.out.println("..................+......"+mp.getRejectCount());
+//                    System.out.println("******************************************");
+//                }
+//                
                 
                 
             } catch (SQLException ex) {
@@ -478,15 +499,15 @@ public class ChartDemoViewP2P implements Serializable {
 //            Class.forName(prop.getProperty("dbdriver"));
 //            try {
 //            stmt5 = conn.createStatement();
-//            String sql = "SELECT routeName FROM dasshboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' GROUP BY routeName";
+//            String sql = "SELECT routeName FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' GROUP BY routeName";
 //            ResultSet rs3 = stmt5.executeQuery(sql);
 //            while (rs3.next()) {
 //                MapperResponseTransactionDestination destinationMapper = new MapperResponseTransactionDestination();
 //                destinationMapper.setDestinationValue(rs3.getString("routeName"));
 //                stmt6 = conn.createStatement();
 //                
-//                String sql2 = "SELECT (SELECT COUNT(*) FROM dasshboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND routeName=\""+  destinationMapper.getDestinationValue() +"\") AS \"aprovved\" ,\n"
-//                        + "(SELECT COUNT(*) FROM dasshboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+destinationMapper.getDestinationValue()+"\")  AS \"reject\""; 
+//                String sql2 = "SELECT (SELECT COUNT(*) FROM dashboard.operations WHERE  transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"'AND responseCode=\"00\" AND routeName=\""+  destinationMapper.getDestinationValue() +"\") AS \"aprovved\" ,\n"
+//                        + "(SELECT COUNT(*) FROM dashboard.operations WHERE transmissionDateTime BETWEEN '"+getBeginningDateTime()+"' AND '"+getCurrentDateTime()+"' AND responseCode<>\"00\" AND responseCode<>\"91\" AND messageTypeIdentifier =\"0210\" AND routeName = \""+destinationMapper.getDestinationValue()+"\")  AS \"reject\""; 
 //                
 //                ResultSet rs4 = stmt6.executeQuery(sql2);
 //                while (rs4.next()) {
@@ -555,7 +576,7 @@ public class ChartDemoViewP2P implements Serializable {
         
         barModel = new BarChartModel();
         List<MapperResponseTransactionDestination> responseList = getTransactionRejectAndAprovedByDestination();
-        System.out.println("lista long:"+responseList.size());
+ //       System.out.println("lista long:"+responseList.size());
         
         ChartSeries aproveds = new ChartSeries();
         aproveds.setLabel("Aprobadas");
@@ -575,7 +596,7 @@ public class ChartDemoViewP2P implements Serializable {
     private String getHoursPass(int hourPass) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR_OF_DAY, -number);
-        System.out.println(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
+  //      System.out.println(String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
         return String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
     }
 
@@ -671,7 +692,7 @@ public class ChartDemoViewP2P implements Serializable {
         cal.set(Calendar.DAY_OF_MONTH, 0);
         cal.add(Calendar.MONTH, -1);
         cal.add(Calendar.DAY_OF_MONTH, 1);
-         System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+     //    System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
      
@@ -685,7 +706,7 @@ public class ChartDemoViewP2P implements Serializable {
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
         cal.add(Calendar.MONTH, -1);
-        System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+   //     System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
     
@@ -701,7 +722,7 @@ public class ChartDemoViewP2P implements Serializable {
         cal.add(Calendar.MONTH, -1);
         cal.add(Calendar.DAY_OF_MONTH, 1);
            cal.add(Calendar.MONTH, -1);
-           System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+  //         System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
     
@@ -709,9 +730,9 @@ public class ChartDemoViewP2P implements Serializable {
      public static Timestamp getCurrentDate(){
          
         Calendar cal = Calendar.getInstance();
-        System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
+    //    System.out.println(""+ new Date(cal.getTimeInMillis()).toString());
         return new Timestamp(cal.getTimeInMillis());
     }
     
-    
+
 }

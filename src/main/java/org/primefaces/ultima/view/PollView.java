@@ -5,6 +5,7 @@
  */
 package org.primefaces.ultima.view;
 
+import com.primefaces.ultima.view.p2p.PollViewP2P;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -63,6 +64,27 @@ public class PollView implements Serializable {
     private static String fileName = "configDASHBOARD.properties";
     private static Properties prop = new Properties();
     private PieChartModel pieModel1;
+    
+
+    ///////////////Contador de P2P
+    public static Integer tempApprovedP2PTest = 0;
+    public static Integer tempRejectP2PTest = 0;
+    public static Integer tempTimeOutP2PTest = 0;
+    public static Integer tempReversedP2PTest = 0;
+
+    ///////////////Contador de DEBITO
+    public static Integer tempApprovedDEBITTest = 0;
+    public static Integer tempRejectDEBITTest = 0;
+    public static Integer tempTimeOutDEBITTest = 0;
+    public static Integer tempReversedDEBITTest = 0;
+
+    ///////////////Contador de CREDITO
+    public static Integer tempApprovedCREDITTest = 0;
+    public static Integer tempRejectCREDITTest = 0;
+    public static Integer tempTimeOutCREDITTest = 0;
+    public static Integer tempReversedCREDITTest = 0;
+
+
 
 
     /////////////CounterTemp
@@ -76,6 +98,8 @@ public class PollView implements Serializable {
      static   Integer countReject = 0;
      static   Integer countTimeOut = 0;
      static    Integer countReversed = 0;
+
+
 
     Connection conn;
 
@@ -96,6 +120,63 @@ public class PollView implements Serializable {
     @Inject
     @Push(channel = "counter")
     private PushContext push;
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////P2P////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Inject
+    @Push(channel = "counterP2P")
+    private PushContext pushP2P;
+    @Inject
+    @Push(channel = "counterReverseP2P")
+    private PushContext pushReverseP2P;
+    @Inject
+    @Push(channel = "counterRejectP2P")
+    private PushContext pushRejectP2P;
+    @Inject
+    @Push(channel = "counterTimeOutP2P")
+    private PushContext pushTimeOutP2P;
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////DEBITO////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Inject
+    @Push(channel = "counterDEBIT")
+    private PushContext pushDEBIT;
+    @Inject
+    @Push(channel = "counterReverseDEBIT")
+    private PushContext pushReverseDEBIT;
+    @Inject
+    @Push(channel = "counterRejectDEBIT")
+    private PushContext pushRejectDEBIT;
+    @Inject
+    @Push(channel = "counterTimeOutDEBIT")
+    private PushContext pushTimeOutDEBIT;
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////CREDITO////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
+    @Inject
+    @Push(channel = "counterCREDIT")
+    private PushContext pushCREDIT;
+
+
+    @Inject
+    @Push(channel = "counterRejectCREDIT")
+    private PushContext pushRejectCREDIT;
+
+    @Inject
+    @Push(channel = "counterTimeOutCREDIT")
+    private PushContext pushTimeOutCREDIT;
+
+    @Inject
+    @Push(channel = "counterReverseCREDIT")
+    private PushContext pushReverseCREDIT;
+
+    
+
+  
+
+
+
 
     public void toggle() {
         connected = true;
@@ -170,7 +251,7 @@ public class PollView implements Serializable {
 
     @PostConstruct
     public void init() {
-
+        
         loadLocalProperties();
         Statement stmt3;
         try {
@@ -713,7 +794,7 @@ public class PollView implements Serializable {
                     socket.close();
                     return;
                 } else {
-                    
+                   
                     
                      try {
                             Operation operation = contructObject(line);
@@ -724,22 +805,78 @@ public class PollView implements Serializable {
                                     tempApproved++;
                                     System.out.println("APROBADA::::::::::");
                                     push.send(tempApproved);
+                                    
+                                    if(operation.getProcessingCode3().equals("560000")){
+                                       System.out.println("***********************tempApprovedP2PTest="+tempApprovedP2PTest);
+                                       pushP2P.send(tempApprovedP2PTest++);
+                                    }
+
+                                    if(operation.getProcessingCode3().equals("002000")){
+                                       System.out.println("***********************tempApprovedDEBITTest="+tempApprovedDEBITTest);
+                                       pushDEBIT.send(tempApprovedDEBITTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("003000")){
+                                      System.out.println("***********************tempApprovedCREDITTest="+tempApprovedCREDITTest);
+                                      pushCREDIT.send(tempApprovedCREDITTest++);
+                                    }
+
+
+  
+    
+    
+ 
 
                                 }
                                 if (operation.getMessageTypeIdentifier().equals("0210") && operation.getResponseCode39().equals("91")) {
-                                    tempTimeOut++;
-                                    System.out.println("TIMEOUT::::::::::");
-                                    pushTimeOut.send(tempTimeOut);
+                                     tempTimeOut++;
+                                     System.out.println("TIMEOUT::::::::::");
+                                     pushTimeOut.send(tempTimeOut);
+                                     if(operation.getProcessingCode3().equals("560000")){
+                                       pushTimeOutP2P.send(tempTimeOutP2PTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("002000")){
+                                       pushTimeOutDEBIT.send(tempTimeOutDEBITTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("003000")){
+                                        pushTimeOutCREDIT.send(tempTimeOutCREDITTest++);                               
+                                    }
+
                                 } else if (operation.getMessageTypeIdentifier().equals("0410")) {
                                     System.out.println("REVERSADA::::::::::");
                                     tempReversed++;
                                     pushReverse.send(tempReversed);
+                                    if(operation.getProcessingCode3().equals("560000")){
+                                       System.out.println("***********************tempReversedP2PTest="+tempReversedP2PTest);
+                                       pushReverseP2P.send(tempReversedP2PTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("002000")){
+                                       pushReverseDEBIT.send(tempReversedDEBITTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("003000")){
+                                        System.out.println("***********************pushReverseCREDIT="+pushReverseCREDIT);
+                                        pushReverseCREDIT.send(tempReversedCREDITTest++);  
+                                    }
                                 } else if ((operation.getMessageTypeIdentifier().equals("0210")) && (!operation.getResponseCode39().equals("00"))) {
                                     System.out.println("RECHAZADA::::::::::");
                                     tempReject++;
                                     pushReject.send(tempReject);
+                                     if(operation.getProcessingCode3().equals("560000")){
+                                       pushRejectP2P.send(tempRejectP2PTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("002000")||operation.getProcessingCode3().equals("001000")||operation.getProcessingCode3().equals("000000")){
+                                       pushRejectDEBIT.send(tempRejectDEBITTest++);
+                                    }
+                                    if(operation.getProcessingCode3().equals("003000")){
+                                    pushRejectCREDIT.send(tempRejectCREDITTest++);
+                                    }
                                 }
                             }
+
+
+
+
+
+
 
                             ThreadSaveTransactionInfo tcpSave = new ThreadSaveTransactionInfo(operation);
                             tcpSave.setDaemon(true);

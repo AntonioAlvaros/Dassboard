@@ -201,7 +201,7 @@ public class TCPServerRunner extends Thread {
             Class.forName(prop.getProperty("dbdriver"));
             Connection conn = DriverManager.getConnection(prop.getProperty("jdbc"), prop.getProperty("dbuser"), prop.getProperty("dbpassword"));
             // the mysql insert statement
-            String query = " INSERT INTO `dasshboard`.`operations`  (`messageTypeIdentifier`, `primaryAccountNumber`, `processingCode`, `amounTransaction`, `transmissionDateTime`, `systemTraceAuditNumber`, `timeLocalTransaction`,`localTransactionDate`,`settlementDate`, `dateCapture`, `merchantCategoryCode`, `posEntryMode`,"
+            String query = " INSERT INTO `dashboard`.`operations`  (`messageTypeIdentifier`, `primaryAccountNumber`, `processingCode`, `amounTransaction`, `transmissionDateTime`, `systemTraceAuditNumber`, `timeLocalTransaction`,`localTransactionDate`,`settlementDate`, `dateCapture`, `merchantCategoryCode`, `posEntryMode`,"
                     + " `codeAcquiringInstitution`, `forwardingInstitutionCode`, `track2Data`, `retrievalReferenceNumber`, `authorizationCode`, `responseCode`, `identificationReceivingTerminalCard`, `nameAndLocationReceiverCard`, `currencyCode`, `reserved58`, "
                     + "`accountIdentificationSource`, `accountIdentificationDestination`,"+ " `description`, `reversed`,`routeName`) VALUES "
                     + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
