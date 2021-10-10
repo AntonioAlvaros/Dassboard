@@ -18,4 +18,16 @@
         </renderer>
     </render-kit>
     
+    <locale-config>
+    <default-locale>de</default-locale>
+    <supported-locale>en_US</supported-locale>
+    <supported-locale>es</supported-locale>
+    <supported-locale>de</supported-locale>
+    <supported-locale>fr_FR</supported-locale>
+    <supported-locale>es_ES</supported-locale>
+    <supported-locale>pt_br</supported-locale>
+  </locale-config>
+
+    
+    
 </faces-config>

@@ -467,7 +467,7 @@
                        <span class="overview-detail">                        
                             <h:outputText class="txt_count_amount-count"  id="txt_count_amount" value="#{pollViewP2C.sumApproved}">                       
                                 
-                                         
+                                  <f:convertNumber locale="es_ES" />          
                             </h:outputText>
                                 
                         </span>
@@ -489,7 +489,7 @@
                         <span class="overview-badge">Monto</span>
                                   <span class="overview-detail">                        
                                       <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reject" value="#{pollViewP2C.sumReject}">                       
-                                         
+                                         <f:convertNumber locale="es_ES" />   
                             </h:outputText>
                         </span>
                          
@@ -512,7 +512,7 @@
                         <span class="overview-badge">Monto</span>
                                         <span class="overview-detail">                        
                                             <h:outputText class="txt_count_amount-count"  id="txt_count_amount_reverse" value="#{pollViewP2C.sumReversed}">    
-                                             
+                                             <f:convertNumber locale="es_ES" />   
                                                 </h:outputText>
                         </span>
                          
