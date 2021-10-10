@@ -143,11 +143,9 @@ public class ChartDemoViewP2P implements Serializable {
 
     @PostConstruct
     public void init() {
-//   System.out.println("init");
+
         loadProperties();
         prop.getProperty("dbdriver");
-        
-        
         try {
             Class.forName(prop.getProperty("dbdriver"));
             try {
@@ -162,11 +160,9 @@ public class ChartDemoViewP2P implements Serializable {
             Logger.getLogger(ChartDemoView.class.getName()).log(Level.SEVERE, null, ex);
         }
 	}
-
 	public void itemSelect(ItemSelectEvent event) {
         FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Item selected",
                         "Item Index: " + event.getItemIndex() + ", Series Index:" + event.getSeriesIndex());
-        
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
@@ -221,9 +217,6 @@ public class ChartDemoViewP2P implements Serializable {
                     DecimalFormat df = new DecimalFormat("#.##");
                     String formatted = df.format(2.456345); 
  //                   System.out.println(formatted);
-
-
-       
                     mapResult.put(rs3.getString("rcode")+" "+ rs3.getString("name"), String.valueOf(Float.valueOf(rs3.getInt("count")) * (100) / Float.valueOf(rs3.getInt("total")))  + "l" + rs3.getInt("count"));
                 }
             } catch (SQLException ex) {
@@ -252,17 +245,6 @@ public class ChartDemoViewP2P implements Serializable {
     public PieChartModel getPieModel2() {
         return pieModel2;
     }
-
-    
-    
- 
-      
-  
-
-    
-
-
-   
 
     public BarChartModel getBarModel() {
         

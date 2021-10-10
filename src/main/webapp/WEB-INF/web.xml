@@ -30,9 +30,8 @@
     <listener>
         <listener-class>org.apache.webbeans.servlet.WebBeansConfigurationListener</listener-class>
     </listener>
-    <listener>
-        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-    </listener>
+   
+   
     <filter>
         <filter-name>Character Encoding Filter</filter-name>
         <filter-class>org.primefaces.ultima.filter.CharacterEncodingFilter</filter-class>
